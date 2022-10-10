@@ -15,6 +15,7 @@ namespace Engine::Audio
             bool Play(int loops);
             bool Play(int loops, int volume);
             bool IsPlaying();
+            bool Stop();
             void Unload();
     };
 };

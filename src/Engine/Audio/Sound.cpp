@@ -49,7 +49,16 @@ bool Sound::IsPlaying()
         return false;
     }
     return true;
+}
 
+bool Sound::Stop()
+{
+    if (Mix_HaltChannel(this->mChannel) == 0)
+    {
+        Logger::Log(Logger::Error, string_format("Failed to stop sound! SDL_Mixer Error: %s", Mix_GetError()));
+        return false;
+    }
+    return true;
 }
 
 void Sound::Unload()
