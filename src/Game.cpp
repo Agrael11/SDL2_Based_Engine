@@ -25,6 +25,11 @@ void Game::LoadContent()
 
 void Game::Draw(double delta)
 {
+    renderer.Begin();
+
+    renderer.Clean(255,0,255,255);
+
+    renderer.End();
 }
 
 void Game::HandleEvent(SDL_Event e)
@@ -95,6 +100,9 @@ void Game::KeyDown(SDL_KeyboardEvent e)
         case SDL_SCANCODE_ESCAPE:
             this->mRunning = false;
             break;
+        case SDL_SCANCODE_F4:
+            this->mPressedF4 = true;
+            break;  
         default:
             break;
     }
@@ -102,6 +110,14 @@ void Game::KeyDown(SDL_KeyboardEvent e)
 
 void Game::KeyUp(SDL_KeyboardEvent e)
 {
+    if (e.keysym.scancode == SDL_SCANCODE_F4)
+    {
+        if (this->mPressedF4)
+        {
+            ToggleFullscreen();
+            this->mPressedF4 = false;
+        }
+    }
 }
 
 void Game::MouseMove(SDL_MouseMotionEvent e)

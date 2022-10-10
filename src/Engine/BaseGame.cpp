@@ -24,6 +24,8 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
         return;
     }
 
+    this->mFullscreen = false;
+
     Logger::Log(Logger::Info, "Creating Window...");
     this->mWindow = SDL_CreateWindow(
         this->windowTitle.c_str(),
@@ -59,12 +61,27 @@ std::string BaseGame::GetWindowTitle()
 
 void BaseGame::SetWindowSize(SDL_Point size)
 {
+    if (this->mFullscreen)
+    {
+        this->mOriginalWidth = size.x;
+        this->mOriginalWidth = size.y;
+        return;
+    }
+
     this->windowWidth = size.x;
     this->windowHeight = size.y;
+    SDL_SetWindowSize(this->mWindow, this->windowWidth, this->windowHeight);
 }
 
 void BaseGame::SetWindowSize(int width, int height)
 {
+    if (this->mFullscreen)
+    {
+        this->mOriginalWidth = width;
+        this->mOriginalWidth = height;
+        return;
+    }
+
     this->windowWidth = width;
     this->windowHeight = height;
     SDL_SetWindowSize(this->mWindow, this->windowWidth, this->windowHeight);
@@ -74,6 +91,38 @@ void BaseGame::SetWindowTitle(std::string title)
 {
     this->windowTitle = title;
     SDL_SetWindowTitle(this->mWindow, this->windowTitle.c_str());
+}
+
+void BaseGame::ToggleFullscreen()
+{
+#if EMSCRIPTEN
+    Logger::Log(Logger::Warning, "Not supported in SDL currently.");
+    return;
+#else
+    if (!this->mFullscreen)
+    {
+        if (SDL_SetWindowFullscreen(this->mWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+        {
+            Logger::Log(Logger::Warning, string_format("Failed to switch to fullscreen. SDL Error: %s.", SDL_GetError()));
+            return;
+        }
+        this->mOriginalWidth = this->windowWidth;
+        this->mOriginalHeight = this->windowHeight;
+        SDL_GetWindowSize(this->mWindow, &this->windowWidth, &this->windowHeight);
+        this->mFullscreen = true;
+        return;
+    }
+    
+    
+    if (SDL_SetWindowFullscreen(this->mWindow, 0) != 0)
+    {
+        Logger::Log(Logger::Warning, string_format("Failed to switch to windowed. SDL Error: %s.", SDL_GetError()));
+        return;
+    }
+    this->windowWidth = this->mOriginalWidth;
+    this->windowHeight = this->mOriginalHeight;
+    this->mFullscreen = false;
+#endif
 }
 
 void BaseGame::Init()

@@ -12,6 +12,9 @@ namespace Engine
     {
     private:
         SDL_Window* mWindow;
+        int mOriginalWidth;
+        int mOriginalHeight;
+        bool mFullscreen;
     public:
         Engine::Rendering::Renderer renderer;
         int windowWidth;
@@ -27,6 +30,7 @@ namespace Engine
         void SetWindowSize(SDL_Point size);
         void SetWindowSize(int width, int height);
         void SetWindowTitle(std::string title);
+        void ToggleFullscreen();
 
         void Load(int width, int height, std::string windowTitle);
         virtual void Init();

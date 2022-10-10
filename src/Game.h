@@ -12,6 +12,8 @@ class Game: public Engine::BaseGame
 {
 private:
     bool mRunning;
+    bool mPressedF4;
+    
 public:
 
 private:
