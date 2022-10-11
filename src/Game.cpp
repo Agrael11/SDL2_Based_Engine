@@ -5,6 +5,7 @@
 #include "Engine/Helper/Logger.h"
 #include "Engine/Helper/format.h"
 #include "Engine/Audio/Audio.h"
+#include "Engine/Support.h"
 
 using namespace Engine::Helper;
 using namespace Engine::Audio;
@@ -13,10 +14,14 @@ using namespace Engine::Rendering;
 Game::Game(int width, int height, std::string windowTitle)
 {
     this->Load(width, height, windowTitle);
+    this->mRunning = true;
 }
 void Game::Init()
 {
-    InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    if (Engine::Support::audio)
+    {
+        InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    }
 }
 
 void Game::LoadContent()
@@ -64,15 +69,24 @@ void Game::HandleEvent(SDL_Event e)
     }
     else if (e.type == SDL_CONTROLLERAXISMOTION)
     {
-        this->ControllerAxisMove(e.caxis);
+        if (Engine::Support::controller)
+        {
+            this->ControllerAxisMove(e.caxis);
+        }
     }
     else if (e.type == SDL_CONTROLLERBUTTONDOWN)
     {
-        this->ControllerButtonDown(e.cbutton);
+        if (Engine::Support::controller)
+        {
+            this->ControllerButtonDown(e.cbutton);
+        }
     }
     else if (e.type == SDL_CONTROLLERBUTTONUP)
     {
-        this->ControllerButtonUp(e.cbutton);
+        if (Engine::Support::controller)
+        {
+            this->ControllerButtonUp(e.cbutton);
+        }
     }
 }
 

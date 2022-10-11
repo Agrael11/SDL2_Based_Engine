@@ -6,7 +6,7 @@ set (CMAKE_CXX_STANDARD 17)
 set (ENGINE_SOURCE_FILES "./src/Engine/Helper/Logger.cpp"
 "./src/Engine/Rendering/Sprite.cpp" "./src/Engine/Rendering/RenderTexture.cpp" "./src/Engine/Rendering/Renderer.cpp"
 "./src/Engine/Audio/Audio.cpp" "./src/Engine/Audio/Music.cpp" "./src/Engine/Audio/Sound.cpp"
-"./src/Engine/BaseGame.cpp")
+"./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp")
 set (SOURCE_FILES "./src/Game.cpp" "./src/Main.cpp")
 
 if (UNIX)

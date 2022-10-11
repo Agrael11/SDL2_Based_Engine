@@ -2,6 +2,7 @@
 #include "Rendering/Renderer.h"
 #include "Helper/Logger.h"
 #include "Helper/Format.h"
+#include "Support.h"
 
 using namespace Engine;
 using namespace Engine::Helper;
@@ -18,11 +19,24 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
     this->windowTitle = windowTitle;
     
     Logger::Log(Logger::Info, "Initializing SDL2..");
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0 )
+        if( SDL_Init( SDL_INIT_VIDEO) < 0 )
     {
         Logger::Log(Logger::Error, string_format("SDL could not initialize! SDL_Error: %s", SDL_GetError()));
         return;
     }
+
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO))
+    {
+        Logger::Log(Logger::Error, string_format("SDL Audio could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::audio = false;
+    }
+
+    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER))
+    {
+        Logger::Log(Logger::Error, string_format("SDL GameController could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::controller = false;
+    }
+
 
     this->mFullscreen = false;
 
