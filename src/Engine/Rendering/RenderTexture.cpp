@@ -17,20 +17,34 @@ bool RenderTexture::Create(int width, int height, SDL_Renderer* renderer)
         return false;
     }
     
-    this->mWidth = width;
-    this->mHeight = height;
+    this->mSize.x = width;
+    this->mSize.y = height;
+
+    this->originX = 0;
+    this->originY = 0;
 
     return true;
 }
 
+void RenderTexture::SetOrigin(double x, double y)
+{
+    this->originX = x;
+    this->originY = y;
+}
+
 int RenderTexture::GetWidth()
 {
-    return this->mWidth;
+    return this->mSize.x;
 }
 
 int RenderTexture::GetHeight()
 {
-    return this->mHeight;
+    return this->mSize.y;
+}
+
+SDL_Point* RenderTexture::GetSize()
+{
+    return &this->mSize;
 }
 
 bool RenderTexture::SetAsRenderTarget(SDL_Renderer* renderer)
@@ -43,9 +57,27 @@ bool RenderTexture::SetAsRenderTarget(SDL_Renderer* renderer)
     return true;
 }
 
-bool RenderTexture::Draw(SDL_Rect* destinationRectangle, SDL_Renderer* renderer)
+bool RenderTexture::Draw(SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad, SDL_RendererFlip flipping)
 {
-    if (SDL_RenderCopyEx(renderer, this->mTexture, NULL, destinationRectangle, 0, NULL, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+    SDL_Point actualOrigin;
+    actualOrigin.x = (int)(destinationRectangle->w * originX);
+    actualOrigin.y = (int)(destinationRectangle->w * originX);
+
+    if (SDL_RenderCopyEx(renderer, this->mTexture, NULL, destinationRectangle, rotationRad, &actualOrigin, flipping) != 0)
+    {
+        Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
+        return false;
+    }
+    return true;
+}
+
+bool RenderTexture::Draw(SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad, SDL_RendererFlip flipping)
+{
+    SDL_Point actualOrigin;
+    actualOrigin.x = (int)(destinationRectangle->w * originX);
+    actualOrigin.y = (int)(destinationRectangle->w * originX);
+    
+    if (SDL_RenderCopyEx(renderer, this->mTexture, sourceRectangle, destinationRectangle, rotationRad, &actualOrigin, flipping) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
         return false;

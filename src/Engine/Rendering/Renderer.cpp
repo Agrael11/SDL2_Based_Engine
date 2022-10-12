@@ -25,14 +25,22 @@ void Renderer::End()
     SDL_RenderPresent(this->mRenderer);
 }
 
-bool Renderer::DrawSprite(Sprite* sprite, SDL_Rect* destination)
+bool Renderer::DrawSprite(Sprite* sprite, SDL_Rect* destination, SDL_Rect* source, double rotation, SDL_RendererFlip flipping)
 {
-    return sprite->Draw(destination, this->mRenderer);
+    if (source == NULL)
+    {
+        return sprite->Draw(destination, this->mRenderer, rotation, flipping);
+    }
+    return sprite->Draw(source, destination, this->mRenderer, rotation, flipping);
 }
 
-bool Renderer::DrawRenderTexture(RenderTexture* renderTexture, SDL_Rect* destination)
+bool Renderer::DrawRenderTexture(RenderTexture* renderTexture, SDL_Rect* destination, SDL_Rect* source, double rotation, SDL_RendererFlip flipping)
 {
-    return renderTexture->Draw(destination, this->mRenderer);
+    if (source == NULL)
+    {
+        return renderTexture->Draw(destination, this->mRenderer, rotation, flipping);
+    }
+    return renderTexture->Draw(source, destination, this->mRenderer, rotation, flipping);
 }
 
 void Renderer::Clean(int r, int g, int b, int a)

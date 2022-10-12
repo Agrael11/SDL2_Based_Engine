@@ -61,10 +61,12 @@ You should Unload your sprite using *Unload* function in the Quit function of yo
 
 *sourceRectangle* selects area of texture that will be used to draw. You can also get access to it directly in *Sprite->sourceRectangle*  
 
+- *SetOrigin(double x, double y)* sets origin point for rotation, with values ranging from 0 to 1
 - *SetBlendMode(SDL_BlendMode mode)* you can select blend mode of sprite
 - *SetAlphaMod(int alpha)* lets you select additional alpha to your sprite
 - *SetColorMod(int r, int g, int b)* lets you colorize your sprite
-- *Draw(SDL_Rect\* destinationRectangle, SDL_Renderer\* renderer)* is used to draw sprite, but I recommend using Draw method in Renderer class
+- *Draw(SDL_Rect\* destinationRectangle, SDL_Renderer\* renderer, [SDL_Rect\* source = NULL], [double rotation = 0], [SDL_RendererFlip flipping])* is used to draw sprite, but I recommend using Draw method in Renderer class
+- *Draw(SDL_Rect\* sourceRectangle, SDL_Rect\* destinationRectangle, SDL_Renderer\* renderer, [SDL_Rect\* source = NULL], [double rotation = 0], [SDL_RendererFlip flipping])* is a variant with custom specified source rectangle.
 
 *Note: You can get SDL_Renderer\* using GetSDL_Renderer function in Renderer class.*  
 
@@ -86,7 +88,7 @@ If you're rendering into RenderTexture, you need to call these after setting act
 
 *Note: Begin() currently doesn't do anything.
 
-You can draw Sprite and Render Texture using *DrawSprite(Sprite\* sprite, SDL_Rect\* destination)* or *DrawRenderTexture(RenderTexture\* renderTexture, SDL_Rect\* destination)* respectively.  
+You can draw Sprite and Render Texture using *DrawSprite(Sprite\* sprite, SDL_Rect\* destination, [SDL_Rect\* source = NULL], [double rotation = 0], [SDL_RendererFlip flipping])* or *DrawRenderTexture(RenderTexture\* renderTexture, SDL_Rect\* destination, [SDL_Rect\* source = NULL], [double rotation = 0], [SDL_RendererFlip flipping])* respectively.  
 SDL_Rect\* destinatation is place where on screen will image be placed, with NULL being stretched to entire screen/render target.  
 
 You can also you *Clean(int r, int g, int b, int a)* to fill the render target with selected color.  
@@ -138,5 +140,5 @@ You can also Pause, Rewind or Resume using *Pause()* *Rewind()* or *Resume()* fu
 
 ### Controls
 
-Controls are handled using standard SDL_Event in *HandleEvent* function of your game's class.
+Controls are handled using standard SDL_Event in *HandleEvent* function of your game's class.  
 By default a mapping into *KeyDown*, *KeyUp*, *MouseButtonDown*, *MouseButtonUp*, *MouseMove*, *MouseWheelMove*, *ControllerButtonDown*, *ControllerButtonUp* and *ControllerAxisMove* functions are premade for easy access.
