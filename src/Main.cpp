@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "Engine/Helper/Logger.h"
 #include "Engine/Helper/format.h"
+#include "Engine/Support.h"
 
 using namespace Engine::Helper;
 
@@ -25,34 +26,41 @@ void CheckEvents()
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
-        if (e.type == SDL_CONTROLLERDEVICEADDED)
+        if (Engine::Support::controller)
         {
-            int id = e.cdevice.which;
-            SDL_GameController* controller = SDL_GameControllerOpen(id);
-            if (controller == NULL)
+            if (e.type == SDL_CONTROLLERDEVICEADDED)
             {
-                Logger::Log(Logger::Error, string_format("Error opening controller %d! SDL_Error: %s.", id, SDL_GetError()));
+                int id = e.cdevice.which;
+                SDL_GameController* controller = SDL_GameControllerOpen(id);
+                if (controller == NULL)
+                {
+                    Logger::Log(Logger::Error, string_format("Error opening controller %d! SDL_Error: %s.", id, SDL_GetError()));
+                }
+                else
+                {
+                    Logger::Log(Logger::Debug, string_format("Opening controller %d (%s)", id, SDL_GameControllerName(controller)));
+                }
+                controllerChanged = true;
+            }
+            else if (e.type == SDL_CONTROLLERDEVICEREMOVED)
+            {
+                int id = e.cdevice.which;
+                SDL_GameController* controller = SDL_GameControllerFromInstanceID(id);
+                if (controller == NULL)
+                {
+                    Logger::Log(Logger::Error, string_format("Error closing controller %d! SDL_Error: %s.", id, SDL_GetError()));
+                }
+                else
+                {
+                    Logger::Log(Logger::Debug, string_format("Closing controller %d (%s)", id, SDL_GameControllerName(controller)));
+                    SDL_GameControllerClose(controller);
+                }
+                controllerChanged = true;
             }
             else
             {
-                Logger::Log(Logger::Debug, string_format("Opening controller %d (%s)", id, SDL_GameControllerName(controller)));
+                game->HandleEvent(e);
             }
-            controllerChanged = true;
-        }
-        else if (e.type == SDL_CONTROLLERDEVICEREMOVED)
-        {
-            int id = e.cdevice.which;
-            SDL_GameController* controller = SDL_GameControllerFromInstanceID(id);
-            if (controller == NULL)
-            {
-                Logger::Log(Logger::Error, string_format("Error closing controller %d! SDL_Error: %s.", id, SDL_GetError()));
-            }
-            else
-            {
-                Logger::Log(Logger::Debug, string_format("Closing controller %d (%s)", id, SDL_GameControllerName(controller)));
-                SDL_GameControllerClose(controller);
-            }
-            controllerChanged = true;
         }
         else
         {
@@ -71,13 +79,16 @@ void Run()
 
     CheckEvents();
     int changed = 0;
-    while (controllerChanged)
+    if (Engine::Support::controller)
     {
-        SDL_GameControllerUpdate();
-        changed++;
-        Logger::Log(Logger::Debug, string_format("Rechecking events after controller state change (Repeat: %d)", changed));
-        controllerChanged = false;
-        CheckEvents();
+        while (controllerChanged)
+        {
+            SDL_GameControllerUpdate();
+            changed++;
+            Logger::Log(Logger::Debug, string_format("Rechecking events after controller state change (Repeat: %d)", changed));
+            controllerChanged = false;
+            CheckEvents();
+        }
     }
 
     if (!game->Update(delta))
@@ -104,7 +115,7 @@ int main(int argc, char *args[])
     game->LoadContent();
 
 #ifdef EMSCRIPTEN
-    emscripten_set_main_loop(Run, 60, 1);
+    emscripten_set_main_loop(Run, 0, 1);
 #else
     while (quit == false)
     {
