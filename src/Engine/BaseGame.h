@@ -15,12 +15,18 @@ namespace Engine
         int mOriginalWidth;
         int mOriginalHeight;
         bool mFullscreen;
+        #ifdef USE_OPENGL
+        SDL_GLContext mContext;
+        #endif
     public:
         Engine::Rendering::Renderer renderer;
         int windowWidth;
         int windowHeight;
         std::string windowTitle;
     private:
+        #ifdef USE_OPENGL
+        bool initGL();
+        #endif
     public:
         BaseGame();
 

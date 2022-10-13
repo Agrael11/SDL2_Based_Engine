@@ -6,6 +6,7 @@
 
 #include "Sprite.h"
 #include "RenderTexture.h"
+#include "../Math/Color.h"
 
 namespace Engine::Rendering
 {
@@ -17,14 +18,14 @@ namespace Engine::Rendering
         public:
             SDL_Renderer* GetSDL_Renderer();
 
-            void Init(SDL_Window* window, Uint32 flags);
+            void Init(SDL_Window &window, Uint32 flags);
             void Begin();
             void End();
-            bool DrawSprite(Sprite* sprite, SDL_Rect* destination, SDL_Rect* source = NULL, double rotation = 0, SDL_RendererFlip flipping = SDL_FLIP_NONE);
-            bool DrawRenderTexture(RenderTexture* renderTexture, SDL_Rect* destination, SDL_Rect* source = NULL, double rotation = 0, SDL_RendererFlip flipping = SDL_FLIP_NONE);
-            void Clean(int r, int g, int b, int a);
+            bool DrawSprite(Sprite &sprite, Rectangle &destination, Rectangle *source = NULL, double rotation = 0, bool flipHorizontal = false, bool flipVertical = false);
+            bool DrawRenderTexture(RenderTexture &renderTexture, Rectangle &destination, Rectangle *source = NULL, double rotation = 0, bool flipHorizontal = false, bool flipVertical = false);
+            void Clean(Color &color);
             void SetViewport(int x, int y, int width, int height);
-            bool SetRenderTarget(RenderTexture* texture);
+            bool SetRenderTarget(RenderTexture &texture);
             bool CleanRenderTarget();
 
             void Destroy();

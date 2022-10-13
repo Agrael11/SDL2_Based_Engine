@@ -4,30 +4,36 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "../Math/Rectangle.h"
+#include "../Math/Vector2.h"
+#include "../Math/Vector2f.h"
+#include "../Math/Color.h"
+
+using namespace Engine::Math;
+
 namespace Engine::Rendering
 {
+    class Renderer;
     class Sprite
     {
     private:
         SDL_Texture* mTexture;
-        SDL_Point mSize;
+        Vector2 mSize;
 
     public:
-        SDL_Rect sourceRectangle;
-        double originX;
-        double originY;
+        Rectangle sourceRectangle;
+        Vector2f origin;
 
-        bool Load(std::string filePath, SDL_Renderer* renderer);
-        bool Load(std::string filePath, SDL_Rect sourceRectangle, SDL_Renderer* renderer);
-        void SetOrigin(double x, double y);
+        bool Load(std::string filePath, Renderer &renderer);
+        bool Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer);
+        void SetOrigin(float x, float y);
         int GetWidth();
         int GetHeight();
-        SDL_Point* GetSize();
-        bool Draw(SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad = 0, SDL_RendererFlip flipping = SDL_RendererFlip::SDL_FLIP_NONE);
-        bool Draw(SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad = 0, SDL_RendererFlip flipping = SDL_RendererFlip::SDL_FLIP_NONE);
+        Vector2* GetSize();
+        bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
+        bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool SetBlendMode(SDL_BlendMode mode);
-        bool SetAlphaMod(int alpha);
-        bool SetColorMod(int r, int g, int b);
+        bool SetColorMod(Color &color);
         void Unload();
     };
 };

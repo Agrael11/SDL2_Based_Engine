@@ -3,6 +3,11 @@
 #include "Helper/Logger.h"
 #include "Helper/Format.h"
 #include "Support.h"
+#include "Config.h"
+
+#ifdef USE_OPENGL
+#include <SDL_opengles2.h>
+#endif
 
 using namespace Engine;
 using namespace Engine::Helper;
@@ -11,6 +16,15 @@ BaseGame::BaseGame()
 {
 
 }
+
+#ifdef USE_OPENGL
+bool BaseGame::initGL()
+{
+    Logger::Log(Logger::Info, "Loading OpenGL.");
+    
+    return true;
+}
+#endif
 
 void BaseGame::Load(int width, int height, std::string windowTitle)
 {
@@ -40,6 +54,28 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
 
     this->mFullscreen = false;
 
+#ifdef USE_SDL2D
+        Logger::Log(Logger::Info, "Creating Window...");
+        this->mWindow = SDL_CreateWindow(
+            this->windowTitle.c_str(),
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            this->windowWidth,
+            this->windowHeight,
+            SDL_WINDOW_SHOWN
+        );
+
+        if (this->mWindow == NULL)
+        {
+            Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
+            return;
+        }
+#endif
+
+#ifdef USE_OPENGL
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
     Logger::Log(Logger::Info, "Creating Window...");
     this->mWindow = SDL_CreateWindow(
         this->windowTitle.c_str(),
@@ -47,7 +83,7 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
         SDL_WINDOWPOS_UNDEFINED,
         this->windowWidth,
         this->windowHeight,
-        0
+        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
     );
 
     if (this->mWindow == NULL)
@@ -55,9 +91,23 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
         Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
         return;
     }
+    
+    this->mContext = SDL_GL_CreateContext(this->mWindow);
+
+    if (this->mContext == NULL)
+    {
+        Logger::Log(Logger::Error, string_format( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError()));
+        return;
+    }
+
+    if (!this->initGL())
+    {
+        return;
+    }
+#endif
 
     Logger::Log(Logger::Info, "Initializing renderer");
-    renderer.Init(this->mWindow, SDL_RENDERER_ACCELERATED);
+    renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
 }
 
 SDL_Point BaseGame::GetWindowSize()

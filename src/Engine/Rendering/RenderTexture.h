@@ -4,30 +4,36 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "../Math/Rectangle.h"
+#include "../Math/Vector2.h"
+#include "../Math/Vector2f.h"
+#include "../Math/Color.h"
+
+using namespace Engine::Math;
+
 namespace Engine::Rendering
 {
+    class Renderer;
     class RenderTexture
     {
     private:
         SDL_Texture* mTexture;
         SDL_TextureAccess mAccess;
-        SDL_Point mSize;
+        Vector2 mSize;
 
     public:
-        double originX;
-        double originY;
+        Vector2f origin;
 
-        bool Create(int width, int height, SDL_Renderer* renderer);
-        void SetOrigin(double x, double y);
+        bool Create(int width, int height, Renderer &renderer);
+        void SetOrigin(float x, float y);
         int GetWidth();
         int GetHeight();
-        SDL_Point* GetSize();
-        bool SetAsRenderTarget(SDL_Renderer* renderer);
-        bool Draw(SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad = 0, SDL_RendererFlip flipping = SDL_RendererFlip::SDL_FLIP_NONE);
-        bool Draw(SDL_Rect* sourceRectangle, SDL_Rect* destinationRectangle, SDL_Renderer* renderer, double rotationRad = 0, SDL_RendererFlip flipping = SDL_RendererFlip::SDL_FLIP_NONE);
+        Vector2* GetSize();
+        bool SetAsRenderTarget(Renderer &enderer);
+        bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
+        bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool SetBlendMode(SDL_BlendMode mode);
-        bool SetAlphaMod(int alpha);
-        bool SetColorMod(int r, int g, int b);
+        bool SetColorMod(Color &color);
         void Unload();
     };
 };

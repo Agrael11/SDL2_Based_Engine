@@ -6,6 +6,7 @@ set (CMAKE_CXX_STANDARD 17)
 set (ENGINE_SOURCE_FILES "./src/Engine/Helper/Logger.cpp"
 "./src/Engine/Rendering/Sprite.cpp" "./src/Engine/Rendering/RenderTexture.cpp" "./src/Engine/Rendering/Renderer.cpp"
 "./src/Engine/Audio/Audio.cpp" "./src/Engine/Audio/Music.cpp" "./src/Engine/Audio/Sound.cpp"
+"./src/Engine/Math/Vector2f.cpp" "./src/Engine/Math/Vector2.cpp" "./src/Engine/Math/Vector3f.cpp" "./src/Engine/Math/Vector3.cpp" "./src/Engine/Math/Rectanglef.cpp" "./src/Engine/Math/Rectangle.cpp" "./src/Engine/Math/Color.cpp" "./src/Engine/Math/Colorf.cpp" "./src/Engine/Math/MathHelper.cpp"
 "./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp")
 set (SOURCE_FILES "./src/Game.cpp" "./src/Main.cpp")
 
@@ -15,7 +16,7 @@ if (UNIX)
     set(CMAKE_CXX_COMPILER_ID "Emscripten")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
     
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS=[\"png\"] --preload-file Assets")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS=[\"png\"] -sFULL_ES3 -sMAX_WEBGL_VERSION=2")
 
   else()
     message("UNIX")
@@ -25,6 +26,9 @@ if (UNIX)
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_net REQUIRED)
+    find_package(OpenGL REQUIRED)
   endif()
 endif (UNIX)
 
@@ -33,17 +37,23 @@ if (WIN32)
   find_package(SDL2 CONFIG REQUIRED)
   find_package(SDL2-image CONFIG REQUIRED)
   find_package(SDL2_mixer CONFIG REQUIRED)
+  find_package(SDL2_ttf CONFIG REQUIRED)
+  find_package(sdl2-net CONFIG REQUIRED)
 endif (WIN32)
 
 
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
-
-add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${ENGINE_SOURCE_FILES} ${SOURCE_FILES})
-
 if (UNIX)
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+
+  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${ENGINE_SOURCE_FILES} ${SOURCE_FILES})
+
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${OPENGL_LIBRARIES})
 endif (UNIX)
 
 if (WIN32)
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2::SDL2_image SDL2_mixer::SDL2_mixer)
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
+
+  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${ENGINE_SOURCE_FILES} ${SOURCE_FILES})
+
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2::SDL2_image SDL2_mixer::SDL2_mixer OpenGL32.lib GlU32.Lib)
 endif (WIN32)
