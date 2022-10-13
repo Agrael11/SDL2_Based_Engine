@@ -1,5 +1,7 @@
 #ifndef EMSCRIPTEN
 #include <fstream>
+#else
+#include <emscripten.h>
 #endif
 
 #include "Logger.h"
@@ -33,6 +35,12 @@ const std::string return_current_time_and_date(std::string format)
 
 std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool bright)
 {
+    #if EMSCRIPTEN
+
+    return "";
+
+    #else
+
     int col = color;
 
     if (background) col += 40;
@@ -40,7 +48,10 @@ std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool 
     if (bright) col += 60;
 
     if (col == -1) col = 0;
+
     return string_format("\x1b[%dm", col);
+
+    #endif
 }
 
 void Logger::Log(Logger::Level level, std::string message)
