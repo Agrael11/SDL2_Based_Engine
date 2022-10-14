@@ -24,9 +24,6 @@ namespace Engine
         int windowHeight;
         std::string windowTitle;
     private:
-        #ifdef USE_OPENGL
-        bool initGL();
-        #endif
     public:
         BaseGame();
 
@@ -39,6 +36,17 @@ namespace Engine
         void ToggleFullscreen();
 
         void Load(int width, int height, std::string windowTitle);
+        
+        #ifdef USE_SDL2D
+        bool Load_SDL2D(int width, int height, std::string windowTitle);
+        #endif
+        #ifdef USE_OPENGL
+        bool Load_OpenGL(int width, int height, std::string windowTitle);
+        #endif
+        #ifdef USE_OPENGL_ES
+        bool Load_OpenGL_ES(int width, int height, std::string windowTitle);
+        #endif
+
         virtual void Init();
         virtual void LoadContent();
         virtual void HandleEvent(SDL_Event e);

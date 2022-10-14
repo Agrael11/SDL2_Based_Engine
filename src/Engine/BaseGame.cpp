@@ -6,6 +6,9 @@
 #include "Config.h"
 
 #ifdef USE_OPENGL
+#include <SDL_opengl.h>
+#endif
+#ifdef USE_OPENGL_ES
 #include <SDL_opengles2.h>
 #endif
 
@@ -17,17 +20,150 @@ BaseGame::BaseGame()
 
 }
 
-#ifdef USE_OPENGL
-bool BaseGame::initGL()
+void BaseGame::Load(int width, int height, std::string windowTitle)
 {
-    Logger::Log(Logger::Info, "Loading OpenGL.");
+    #ifdef USE_SDL2D
+    this->Load_SDL2D(width, height, windowTitle);
+    #endif
+
+    #ifdef USE_OPENGL
+    this->Load_OpenGL(width, height, windowTitle);
+    #endif
+
+    #ifdef USE_OPENGL_ES
+    this->Load_OpenGL_ES(width, height, windowTitle);
+    #endif
+}
+
+
+
+#ifdef USE_SDL2D
+bool BaseGame::Load_SDL2D(int width, int height, std::string windowTitle)
+{
+    Logger::Log(Logger::Info, "Loading SDL2D.");
     
+    this->windowWidth = width;
+    this->windowHeight = height;
+    this->windowTitle = windowTitle;
+    
+    Logger::Log(Logger::Info, "Initializing SDL2..");
+        if( SDL_Init( SDL_INIT_VIDEO) < 0 )
+    {
+        Logger::Log(Logger::Error, string_format("SDL could not initialize! SDL_Error: %s", SDL_GetError()));
+        return false;
+    }
+
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO))
+    {
+        Logger::Log(Logger::Error, string_format("SDL Audio could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::audio = false;
+    }
+
+    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER))
+    {
+        Logger::Log(Logger::Error, string_format("SDL GameController could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::controller = false;
+    }
+
+
+    this->mFullscreen = false;
+
+    Logger::Log(Logger::Info, "Creating Window...");
+    this->mWindow = SDL_CreateWindow(
+        this->windowTitle.c_str(),
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        this->windowWidth,
+        this->windowHeight,
+        SDL_WINDOW_SHOWN
+    );
+
+    if (this->mWindow == NULL)
+    {
+        Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
+        return false;
+    }
+
+    Logger::Log(Logger::Info, "Initializing renderer");
+    renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
+
     return true;
 }
 #endif
 
-void BaseGame::Load(int width, int height, std::string windowTitle)
+#ifdef USE_OPENGL
+bool BaseGame::Load_OpenGL()
 {
+    Logger::Log(Logger::Info, "Loading SDL2D.");
+    
+    this->windowWidth = width;
+    this->windowHeight = height;
+    this->windowTitle = windowTitle;
+    
+    Logger::Log(Logger::Info, "Initializing SDL2..");
+        if( SDL_Init( SDL_INIT_VIDEO) < 0 )
+    {
+        Logger::Log(Logger::Error, string_format("SDL could not initialize! SDL_Error: %s", SDL_GetError()));
+        return false;
+    }
+
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO))
+    {
+        Logger::Log(Logger::Error, string_format("SDL Audio could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::audio = false;
+    }
+
+    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER))
+    {
+        Logger::Log(Logger::Error, string_format("SDL GameController could not initialize! SDL_Error: %s", SDL_GetError()));
+        Support::controller = false;
+    }
+
+
+    this->mFullscreen = false;
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+    Logger::Log(Logger::Info, "Creating Window...");
+    this->mWindow = SDL_CreateWindow(
+        this->windowTitle.c_str(),
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        this->windowWidth,
+        this->windowHeight,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+    );
+
+    if (this->mWindow == NULL)
+    {
+        Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
+        return false;
+    }
+    
+    this->mContext = SDL_GL_CreateContext(this->mWindow);
+
+    if (this->mContext == NULL)
+    {
+        Logger::Log(Logger::Error, string_format( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError()));
+        return false;
+    }
+
+    //TODO TODO
+
+    Logger::Log(Logger::Info, "Initializing renderer");
+    renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
+
+    return true;
+}
+#endif
+
+#ifdef USE_OPENGL_ES
+bool BaseGame::Load_OpenGL_ES()
+{
+
+    Logger::Log(Logger::Info, "Loading SDL2D.");
+    
     this->windowWidth = width;
     this->windowHeight = height;
     this->windowTitle = windowTitle;
@@ -54,25 +190,6 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
 
     this->mFullscreen = false;
 
-#ifdef USE_SDL2D
-        Logger::Log(Logger::Info, "Creating Window...");
-        this->mWindow = SDL_CreateWindow(
-            this->windowTitle.c_str(),
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            this->windowWidth,
-            this->windowHeight,
-            SDL_WINDOW_SHOWN
-        );
-
-        if (this->mWindow == NULL)
-        {
-            Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
-            return;
-        }
-#endif
-
-#ifdef USE_OPENGL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -89,7 +206,7 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
     if (this->mWindow == NULL)
     {
         Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: %s", SDL_GetError()));
-        return;
+        return false;
     }
     
     this->mContext = SDL_GL_CreateContext(this->mWindow);
@@ -97,18 +214,19 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
     if (this->mContext == NULL)
     {
         Logger::Log(Logger::Error, string_format( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError()));
-        return;
+        return false;
     }
 
-    if (!this->initGL())
-    {
-        return;
-    }
-#endif
+    //TODO, TODO
 
     Logger::Log(Logger::Info, "Initializing renderer");
     renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
+
+    return true;
 }
+#endif
+
+
 
 SDL_Point BaseGame::GetWindowSize()
 {
