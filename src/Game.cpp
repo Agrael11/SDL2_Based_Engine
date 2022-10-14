@@ -119,7 +119,7 @@ void Game::LoadContent()
     this->blueSquare = this->BuildTexture(4,4,this->mColorDarkBlue);
     this->greenSquare = this->BuildTexture(4,4,this->mColorLightGreen);
     this->greenSquare.SetOrigin(0.5f, 0.5f);
-    this->backgroundImage.Load("Assets/bg.png", renderer);
+    this->backgroundImage.Load("Assets/BG.png", renderer);
     Color cMod(25,25,25,255);
     this->backgroundImage.SetColorMod(cMod);
 }
