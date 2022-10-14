@@ -2,7 +2,7 @@
 
 #define USE_SDL2D
 
-#ifndef USE_SDL
+#ifndef USE_SDL2D
     #ifdef EMSCRIPTEN
         #define USE_OPENGL_ES
     #else
