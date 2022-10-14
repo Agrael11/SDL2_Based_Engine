@@ -4,9 +4,7 @@
 
 #include "Vector2.h"
 
-#ifdef USE_SDL2D
 #include <SDL.h>
-#endif
 
 using namespace Engine::Math;
 
@@ -76,7 +74,6 @@ Vector2f Vector2f::operator/ (float mult)
     return Vector2f(this->X / mult, this->Y / mult);
 }
 
-#ifdef USE_SDL2D
 SDL_Point Vector2f::GetSDL_Point()
 {
     SDL_Point point;
@@ -84,4 +81,3 @@ SDL_Point Vector2f::GetSDL_Point()
     point.y = (int)this->Y;
     return point;
 }
-#endif

@@ -1,8 +1,6 @@
 #include "Rectangle.h"
 
-//#ifdef USE_SDL2D
 #include <SDL.h>
-//#endif
 
 using namespace Engine::Math;
 
@@ -50,7 +48,6 @@ int Rectangle::GetY2()
     return this->Y + this->Height;
 }
 
-//#ifdef USE_SDL2D
 SDL_Rect Rectangle::GetSDL_Rect()
 {
     SDL_Rect rect;
@@ -60,4 +57,3 @@ SDL_Rect Rectangle::GetSDL_Rect()
     rect.h = this->Height;
     return rect;
 }
-//#endif

@@ -2,9 +2,7 @@
 
 #include "../Config.h"
 
-//#ifdef USE_SDL2D
 #include <SDL.h>
-//#endif
 
 namespace Engine::Math
 {
@@ -24,8 +22,6 @@ namespace Engine::Math
         int GetX2();
         int GetY2();
 
-        //#ifdef USE_SDL2D
         SDL_Rect GetSDL_Rect();
-        //#endif
     };
 };

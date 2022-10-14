@@ -2,9 +2,7 @@
 
 #include "../Config.h"
 
-#ifdef USE_SDL2D
 #include <SDL.h>
-#endif
 
 namespace Engine::Math
 {
@@ -29,8 +27,6 @@ namespace Engine::Math
         Vector2f operator* (float mult);
         Vector2f operator/ (float mult);
 
-        #ifdef USE_SDL2D
         SDL_Point GetSDL_Point();
-        #endif
     };
 };
