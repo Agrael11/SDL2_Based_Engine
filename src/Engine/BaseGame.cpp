@@ -3,7 +3,6 @@
 #include "Helper/Logger.h"
 #include "Helper/Format.h"
 #include "Support.h"
-#include "Config.h"
 
 #ifdef USE_OPENGL
 #include <SDL_opengl.h>
@@ -92,9 +91,9 @@ bool BaseGame::Load_SDL2D(int width, int height, std::string windowTitle)
 #endif
 
 #ifdef USE_OPENGL
-bool BaseGame::Load_OpenGL()
+bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
 {
-    Logger::Log(Logger::Info, "Loading SDL2D.");
+    Logger::Log(Logger::Info, "Loading OpenGL.");
     
     this->windowWidth = width;
     this->windowHeight = height;
@@ -159,10 +158,10 @@ bool BaseGame::Load_OpenGL()
 #endif
 
 #ifdef USE_OPENGL_ES
-bool BaseGame::Load_OpenGL_ES()
+bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
 {
 
-    Logger::Log(Logger::Info, "Loading SDL2D.");
+    Logger::Log(Logger::Info, "Loading OpenGL ES.");
     
     this->windowWidth = width;
     this->windowHeight = height;

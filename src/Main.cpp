@@ -101,7 +101,6 @@ void Run()
 
 int main(int argc, char *args[])
 {
-
     Logger::MinimumPrintLevel = Logger::Debug;
     Logger::MinimumFileLevel = Logger::Debug;
     Logger::FileName = "Log.log";

@@ -3,12 +3,32 @@ set(PROJECT_AND_EXECATUBLE_NAME SDL_Engine_Base)
 project(${PROJECT_AND_EXECATUBLE_NAME})
 set (CMAKE_CXX_STANDARD 17)
 
+set (USE_SDL2D false)
+
+if (USE_SDL2D)
+  message("Use SDL2D")
+  add_compile_definitions(USE_SDL2D)
+  set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/2D/Sprite.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/Renderer.cpp")
+else ()
+  if ((UNIX) AND (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$"))
+    message ("Use OpenGL ES")
+    add_compile_definitions(USE_OPENGL_ES)
+    set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp")
+  else ()  
+    message ("Use OpenGL")
+    add_compile_definitions(USE_OPENGL)
+    set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp")
+  endif()
+endif()
+
+
 set (ENGINE_SOURCE_FILES "./src/Engine/Helper/Logger.cpp"
-"./src/Engine/Rendering/Sprite.cpp" "./src/Engine/Rendering/RenderTexture.cpp" "./src/Engine/Rendering/Renderer.cpp"
+${RENDERER_SOURCE_FILES}
 "./src/Engine/Audio/Audio.cpp" "./src/Engine/Audio/Music.cpp" "./src/Engine/Audio/Sound.cpp"
 "./src/Engine/Math/Vector2f.cpp" "./src/Engine/Math/Vector2.cpp" "./src/Engine/Math/Vector3f.cpp" "./src/Engine/Math/Vector3.cpp" "./src/Engine/Math/Rectanglef.cpp" "./src/Engine/Math/Rectangle.cpp" "./src/Engine/Math/Color.cpp" "./src/Engine/Math/Colorf.cpp" "./src/Engine/Math/MathHelper.cpp"
 "./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp")
-set (SOURCE_FILES "./src/Game.cpp" "./src/Main.cpp")
+set (GAME_SOURCE_FILES "./src/Game.cpp")
+set (SOURCE_FILES ${ENGINE_SOURCE_FILES} ${GAME_SOURCE_FILES} "./src/Main.cpp")
 
 if (UNIX)
   if(CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
@@ -46,7 +66,7 @@ endif (WIN32)
 if (UNIX)
   include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
 
-  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${ENGINE_SOURCE_FILES} ${SOURCE_FILES})
+  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
   target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${OPENGL_LIBRARIES})
 endif (UNIX)
@@ -54,7 +74,7 @@ endif (UNIX)
 if (WIN32)
   include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
 
-  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${ENGINE_SOURCE_FILES} ${SOURCE_FILES})
+  add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
   target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_image SDL2_mixer::SDL2_mixer SDL2::SDL2_net SDL2_ttf::SDL2_ttf OpenGL32.lib GlU32.Lib)
 endif (WIN32)

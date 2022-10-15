@@ -15,8 +15,6 @@
 #define DEATH_ZONE 10000
 #define MOUSE_AREA 4
 
-#define USE_OPENGL
-
 class Game: public Engine::BaseGame
 {
 private:

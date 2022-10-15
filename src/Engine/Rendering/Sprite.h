@@ -1,7 +1,3 @@
-#pragma once
-
-#include "../Config.h"
-
 #ifdef USE_SDL2D
     #include "2D/Sprite.h"
 #else
