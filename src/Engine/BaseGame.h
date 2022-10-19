@@ -15,9 +15,6 @@ namespace Engine
         int mOriginalWidth;
         int mOriginalHeight;
         bool mFullscreen;
-        #ifdef USE_OPENGL
-        SDL_GLContext mContext;
-        #endif
     public:
         Engine::Rendering::Renderer renderer;
         int windowWidth;

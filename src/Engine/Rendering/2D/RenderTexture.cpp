@@ -10,7 +10,6 @@ using namespace Engine::Math;
 
 bool RenderTexture::Create(int width, int height, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, "Creating render texture");
     this->mAccess = SDL_TEXTUREACCESS_TARGET;
     this->mTexture = SDL_CreateTexture(renderer.GetSDL_Renderer(), SDL_PIXELFORMAT_RGBA8888, this->mAccess, width, height);
 

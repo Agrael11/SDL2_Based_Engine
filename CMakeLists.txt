@@ -17,7 +17,10 @@ else ()
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
-    set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp")
+    set (RENDERER_SOURCE_FILES
+     "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp"
+      "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" 
+      "./src/Engine/Rendering/OpenGL/glad.c")
   endif()
 endif()
 
@@ -60,21 +63,22 @@ if (WIN32)
   find_package(SDL2_mixer CONFIG REQUIRED)
   find_package(SDL2_ttf CONFIG REQUIRED)
   find_package(sdl2-net CONFIG REQUIRED)
+  find_package(glm CONFIG REQUIRED)
 endif (WIN32)
 
 
 if (UNIX)
-  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS})
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${OPENGL_LIBRARIES})
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
 endif (UNIX)
 
 if (WIN32)
-  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS})
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_image SDL2_mixer::SDL2_mixer SDL2::SDL2_net SDL2_ttf::SDL2_ttf OpenGL32.lib GlU32.Lib)
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_image SDL2_mixer::SDL2_mixer SDL2::SDL2_net SDL2_ttf::SDL2_ttf glm::glm)
 endif (WIN32)

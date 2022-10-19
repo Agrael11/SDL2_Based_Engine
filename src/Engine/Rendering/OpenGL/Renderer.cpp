@@ -2,17 +2,46 @@
 #include "../../Helper/format.h"
 #include "../../Helper/Logger.h"
 
+#include "../../Math/Color.h"
+#include "../../Math/Colorf.h"
+
 using namespace Engine::Helper;
 using namespace Engine::Rendering;
 
+#include "glad/glad.h"
+
 SDL_Renderer* Renderer::GetSDL_Renderer()
 {
-    return this->mRenderer;
+    return NULL;
 }
 
-void Renderer::Init(SDL_Window &window, Uint32 flags)
+bool Renderer::Init(SDL_Window &window, Uint32 flags    )
 {
-    this->mRenderer = SDL_CreateRenderer(&window, -1, SDL_RENDERER_SOFTWARE);
+    this->mWindowReference = &window;
+
+    Logger::Log(Logger::Info, "Creating context.");
+    this->mContext = SDL_GL_CreateContext(&window);
+    if (this->mContext == NULL)
+    {
+        Logger::Log(Logger::Error, "Failed to create context.");
+        return false;
+    }
+
+    gladLoadGLLoader(SDL_GL_GetProcAddress);
+    Logger::Log(Logger::Info, "OpenGL Loaded.");
+    Logger::Log(Logger::Info, string_format("Vendor:     %s", glGetString(GL_VENDOR)));
+    Logger::Log(Logger::Info, string_format("Renderer:   %s", glGetString(GL_RENDERER)));
+    Logger::Log(Logger::Info, string_format("Version:    %s", glGetString(GL_VERSION)));
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    int w,h;
+    SDL_GetWindowSize(&window, &w, &h);
+    SetViewport(0, 0, w, h);
+    glClearColor(0.5, 0.5, 0.5, 0);
+
+    return true;
 }
 
 void Renderer::Begin()
@@ -22,7 +51,10 @@ void Renderer::Begin()
 
 void Renderer::End()
 {
-    SDL_RenderPresent(this->mRenderer);
+    if (!this->mRenderTexture)
+    {
+        SDL_GL_SwapWindow(this->mWindowReference);
+    }
 }
 
 bool Renderer::DrawSprite(Sprite &sprite, Rectangle &destination, Rectangle *source, double rotation, bool flipHorizontal, bool flipVertical)
@@ -45,36 +77,56 @@ bool Renderer::DrawRenderTexture(RenderTexture &renderTexture, Rectangle &destin
 
 void Renderer::Clean(Color &color)
 {
-    SDL_SetRenderDrawColor(this->mRenderer, color.R, color.G, color.B, color.A);
-    SDL_RenderClear(this->mRenderer);
+    Colorf colorf = color.GetColorf();
+    glClearColor(colorf.R, colorf.G, colorf.B, colorf.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::Clean(Colorf &color)
+{
+    glClearColor(color.R, color.G, color.B, color.A);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
     
 void Renderer::SetViewport(int x, int y, int width, int height)
 {
-    SDL_Rect viewport;
-    viewport.x = x;
-    viewport.y = y;
-    viewport.w = width;
-    viewport.h = height;
-    SDL_RenderSetViewport(this->mRenderer, &viewport);
+    glViewport(x, y, width, height);
+    this->mViewPort.X = x;
+    this->mViewPort.Y = y;
+    this->mViewPort.Width = width;
+    this->mViewPort.Height = height;
+}
+
+    
+Rectangle Renderer::GetViewport()
+{
+    return this->mViewPort;
 }
 
 bool Renderer::SetRenderTarget(RenderTexture &texture)
 {
+    this->mRenderTexture = true;
     return texture.SetAsRenderTarget(*this);
 }
 bool Renderer::CleanRenderTarget()
 {
-    if (SDL_SetRenderTarget(this->mRenderer, NULL) != 0)
-    {
-        Logger::Log(Logger::Error, string_format("Unable to clean render texture! SDL Error: %s", SDL_GetError()));
-        return false;
-    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    this->mRenderTexture = false;
     return true;
 }
 
 void Renderer::Destroy()
 {
-    SDL_DestroyRenderer(this->mRenderer);
-    this->mRenderer = NULL;
+    SDL_GL_DeleteContext(this->mContext);
+    this->mContext = NULL;
+}
+
+void Renderer::SetActiveShader(Shader* shader)
+{
+    this->mActiveShader = shader;
+}
+
+Shader* Renderer::GetActiveShader()
+{
+    return this->mActiveShader;
 }

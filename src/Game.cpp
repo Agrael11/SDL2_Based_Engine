@@ -9,11 +9,15 @@
 #include "Engine/Audio/Audio.h"
 #include "Engine/Support.h"
 
+#include "Engine/Math/Color.h"
+#include "Engine/Math/Colorf.h"
+
 using namespace Engine::Helper;
+using namespace Engine::Math;
 using namespace Engine::Audio;
 using namespace Engine::Rendering;
 
-RenderTexture Game::BuildTexture(int width, int height, Color &color)
+RenderTexture Game::BuildTexture(int width, int height, Colorf &color)
 {
     RenderTexture texture;
     texture.Create(width, height, renderer);
@@ -102,11 +106,11 @@ void Game::Init()
         InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     }
     
-    this->mColorBlack = Color(0,0,0,255);
-    this->mColorDarkGray = Color(25,25,25,255);
-    this->mColorDarkBlue = Color(25,25,255,255);
-    this->mColorDarkRed = Color(75,25,25,255);
-    this->mColorLightGreen = Color(125,225,125,255);
+    this->mColorBlack = Colorf(0,0,0,1.0f);
+    this->mColorDarkGray = Colorf(0.1f,0.1f,0.1f,1.0f);
+    this->mColorDarkBlue = Colorf(0.1f,0.1f,1.0f,1.0f);
+    this->mColorDarkRed = Colorf(0.3f,0.1f,0.1f,1.0f);
+    this->mColorLightGreen = Colorf(0.5f,0.85f,0.5f,1.0f);
 
     this->rotato = 0;
     this->ResetGame();
@@ -114,13 +118,15 @@ void Game::Init()
 
 void Game::LoadContent()
 {
+    this->mShader.LoadFromFile("Assets/mainShader.vert", "Assets/mainShader.frag");
+
     this->mainTarget.Create(64, 64, renderer);
     this->blackSquare = this->BuildTexture(4,4,this->mColorDarkGray);
     this->blueSquare = this->BuildTexture(4,4,this->mColorDarkBlue);
     this->greenSquare = this->BuildTexture(4,4,this->mColorLightGreen);
     this->greenSquare.SetOrigin(0.5f, 0.5f);
     this->backgroundImage.Load("Assets/BG.png", renderer);
-    Color cMod(25,25,25,255);
+    Colorf cMod(0.1f,0.1f,0.1f,1.f);
     this->backgroundImage.SetColorMod(cMod);
 }
 
@@ -129,15 +135,15 @@ void Game::Draw(double delta)
     this->renderer.SetRenderTarget(mainTarget);
     this->renderer.Begin();
     this->renderer.Clean(this->mColorDarkRed);
-
+    this->renderer.SetActiveShader(&this->mShader);
     Rectangle pos = Rectangle(0,0,64,64);
 
     this->renderer.DrawSprite(this->backgroundImage, pos);
     
     //Draw point
     
-    pos.X = this->point.X * TILE_SIZE;
-    pos.Y = this->point.Y * TILE_SIZE;
+    pos.X = point.X * TILE_SIZE;
+    pos.Y = (PLAY_SIZE-point.Y-1) * TILE_SIZE;
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
 
@@ -148,7 +154,7 @@ void Game::Draw(double delta)
     for (Vector2 tail : this->tails)
     {
         pos.X = tail.X * TILE_SIZE;
-        pos.Y = tail.Y * TILE_SIZE;
+        pos.Y = (PLAY_SIZE-tail.Y-1) * TILE_SIZE;
         pos.Width = TILE_SIZE;
         pos.Height = TILE_SIZE;
 
@@ -158,7 +164,7 @@ void Game::Draw(double delta)
     //Draw Head
 
     pos.X = this->playerPos.X * TILE_SIZE;
-    pos.Y = this->playerPos.Y * TILE_SIZE;
+    pos.Y = (PLAY_SIZE-this->playerPos.Y-1) * TILE_SIZE;
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
     
@@ -166,8 +172,10 @@ void Game::Draw(double delta)
 
     this->renderer.End();
 
-    //Draw canvas
+    
 
+    //Draw canvas
+    
     this->renderer.CleanRenderTarget();
     this->renderer.Begin();
 
@@ -189,8 +197,9 @@ void Game::Draw(double delta)
         pos.Height = this->windowHeight;
         this->renderer.DrawRenderTexture(mainTarget, pos);
     }
-
+    
     this->renderer.End();
+    
 }
 
 void Game::HandleEvent(SDL_Event e)

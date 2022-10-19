@@ -5,8 +5,11 @@
 #include "Engine/BaseGame.h"
 #include "Engine/Rendering/Sprite.h"
 #include "Engine/Rendering/RenderTexture.h"
+#include "Engine/Rendering/Shader.h"
 #include "Engine/Audio/Music.h"
 #include "Engine/Audio/Sound.h"
+#include "Engine/Math/Color.h"
+#include "Engine/Math/Colorf.h"
 
 #define START_LENGTH 4
 #define MAX_TIMER 250
@@ -20,11 +23,12 @@ class Game: public Engine::BaseGame
 private:
     bool mRunning;
     bool mPressedF4;
-    Color mColorBlack;
-    Color mColorDarkGray;
-    Color mColorDarkBlue;
-    Color mColorDarkRed;
-    Color mColorLightGreen;
+    Engine::Math::Colorf mColorBlack;
+    Engine::Math::Colorf mColorDarkGray;
+    Engine::Math::Colorf mColorDarkBlue;
+    Engine::Math::Colorf mColorDarkRed;
+    Engine::Math::Colorf mColorLightGreen;
+    Engine::Rendering::Shader mShader;
     
 public:
     Engine::Rendering::RenderTexture mainTarget;
@@ -57,7 +61,7 @@ private:
     void ControllerButtonUp(SDL_ControllerButtonEvent e);
 public:
 
-    Engine::Rendering::RenderTexture BuildTexture(int width, int height, Color &color);
+    Engine::Rendering::RenderTexture BuildTexture(int width, int height, Colorf &color);
     void GeneratePoint();
     void ResetGame();
     void Move(int dir);

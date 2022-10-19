@@ -11,6 +11,11 @@
 
 using namespace Engine::Math;
 
+namespace Engine::Rendering::BlendMode
+{
+    enum BlendMode {None, Add, Blend, Mod};
+}
+
 namespace Engine::Rendering
 {
     class Renderer;
@@ -32,7 +37,7 @@ namespace Engine::Rendering
         Vector2* GetSize();
         bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
-        bool SetBlendMode(SDL_BlendMode mode);
+        bool SetBlendMode(BlendMode::BlendMode mode);
         bool SetColorMod(Color &color);
         void Unload();
     };

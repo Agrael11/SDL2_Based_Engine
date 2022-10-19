@@ -34,8 +34,6 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
     #endif
 }
 
-
-
 #ifdef USE_SDL2D
 bool BaseGame::Load_SDL2D(int width, int height, std::string windowTitle)
 {
@@ -121,8 +119,13 @@ bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
 
     this->mFullscreen = false;
 
+    SDL_GL_LoadLibrary(NULL);
+
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     Logger::Log(Logger::Info, "Creating Window...");
     this->mWindow = SDL_CreateWindow(
@@ -140,16 +143,6 @@ bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
         return false;
     }
     
-    this->mContext = SDL_GL_CreateContext(this->mWindow);
-
-    if (this->mContext == NULL)
-    {
-        Logger::Log(Logger::Error, string_format( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError()));
-        return false;
-    }
-
-    //TODO TODO
-
     Logger::Log(Logger::Info, "Initializing renderer");
     renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
 
@@ -224,8 +217,6 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
     return true;
 }
 #endif
-
-
 
 SDL_Point BaseGame::GetWindowSize()
 {

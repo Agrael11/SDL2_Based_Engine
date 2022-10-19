@@ -114,9 +114,26 @@ bool Sprite::Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, R
     return true;
 }
 
-bool Sprite::SetBlendMode(SDL_BlendMode mode)
+bool Sprite::SetBlendMode(BlendMode::BlendMode mode)
 {
-    if (SDL_SetTextureBlendMode(this->mTexture, mode) != 0)
+    SDL_BlendMode bMode;
+    switch (mode)
+    {
+        case BlendMode::Add:
+        bMode = SDL_BLENDMODE_ADD;
+        break;
+        case BlendMode::Mod:
+        bMode = SDL_BLENDMODE_MOD;
+        break;
+        case BlendMode::Blend:
+        bMode = SDL_BLENDMODE_BLEND;
+        break;
+        default:
+        case BlendMode::None:
+        bMode = SDL_BLENDMODE_NONE;
+        break;
+    }
+    if (SDL_SetTextureBlendMode(this->mTexture, bMode) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to set texture blend mode! SDL Error: %s", SDL_GetError()));
         return false;

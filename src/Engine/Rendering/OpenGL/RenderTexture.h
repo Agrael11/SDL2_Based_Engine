@@ -6,7 +6,9 @@
 #include "../../Math/Rectangle.h"
 #include "../../Math/Vector2.h"
 #include "../../Math/Vector2f.h"
-#include "../../Math/Color.h"
+#include "../../Math/Colorf.h"
+#include "Sprite.h"
+#include "Shader.h"
 
 using namespace Engine::Math;
 
@@ -16,9 +18,15 @@ namespace Engine::Rendering
     class RenderTexture
     {
     private:
-        SDL_Texture* mTexture;
-        SDL_TextureAccess mAccess;
+        unsigned int mFrameBuffer;
+        unsigned int mTexture;
         Vector2 mSize;
+        Colorf mColor;
+        Rectangle mSourceRectangle;
+
+        unsigned int mVAO;
+
+        void mBuildVAO();
 
     public:
         Vector2f origin;
@@ -31,8 +39,8 @@ namespace Engine::Rendering
         bool SetAsRenderTarget(Renderer &enderer);
         bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
-        bool SetBlendMode(SDL_BlendMode mode);
-        bool SetColorMod(Color &color);
+        bool SetBlendMode(BlendMode::BlendMode mode);
+        bool SetColorMod(Colorf &color);
         void Unload();
     };
 };
