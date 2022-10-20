@@ -23,7 +23,7 @@ bool Renderer::Init(SDL_Window &window, Uint32 flags    )
     this->mContext = SDL_GL_CreateContext(&window);
     if (this->mContext == NULL)
     {
-        Logger::Log(Logger::Error, "Failed to create context.");
+        Logger::Log(Logger::Error, string_format("Failed to create context. SDL_Error: %s", SDL_GetError()));
         return false;
     }
 

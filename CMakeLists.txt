@@ -46,7 +46,7 @@ if (UNIX)
     message("UNIX")
 
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/linux/")
-
+    find_library(DL_LIBRARY libdl.so  )
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -72,7 +72,7 @@ if (UNIX)
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${DL_LIBRARY})
 endif (UNIX)
 
 if (WIN32)
