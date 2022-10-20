@@ -7,9 +7,15 @@
 #include "../../Math/Rectangle.h"
 #include "../../Math/Vector2.h"
 #include "../../Math/Vector2f.h"
-#include "../../Math/Color.h"
+#include "../../Math/Colorf.h"
+#include "Shader.h"
 
 using namespace Engine::Math;
+
+namespace Engine::Rendering::BlendMode
+{
+    enum BlendMode {Add, Subtract, ReverseSubtract, Min, Max};
+}
 
 namespace Engine::Rendering
 {
@@ -17,8 +23,13 @@ namespace Engine::Rendering
     class Sprite
     {
     private:
-        SDL_Texture* mTexture;
+        unsigned int mTexture;
         Vector2 mSize;
+        Colorf mColor;
+        
+        unsigned int mVAO;
+
+        void mBuildVAO();
 
     public:
         Rectangle sourceRectangle;
@@ -27,13 +38,14 @@ namespace Engine::Rendering
         bool Load(std::string filePath, Renderer &renderer);
         bool Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer);
         void SetOrigin(float x, float y);
+        void SetSourceRectangle(Rectangle &r);
         int GetWidth();
         int GetHeight();
         Vector2* GetSize();
         bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
-        bool SetBlendMode(SDL_BlendMode mode);
-        bool SetColorMod(Color &color);
+        bool SetBlendMode(Engine::Rendering::BlendMode::BlendMode mode);
+        bool SetColorMod(Colorf &color);
         void Unload();
     };
 };

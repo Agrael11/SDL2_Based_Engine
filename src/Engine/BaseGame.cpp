@@ -7,7 +7,7 @@
 #ifdef USE_OPENGL
 #include <SDL_opengl.h>
 #endif
-#ifdef USE_OPENGL_ES
+#ifdef USE_ES_OPENGL
 #include <SDL_opengles2.h>
 #endif
 
@@ -154,7 +154,7 @@ bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
 bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
 {
 
-    Logger::Log(Logger::Info, "Loading OpenGL ES.");
+   Logger::Log(Logger::Info, "Loading OpenGL.");
     
     this->windowWidth = width;
     this->windowHeight = height;
@@ -164,7 +164,7 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
         if( SDL_Init( SDL_INIT_VIDEO) < 0 )
     {
         Logger::Log(Logger::Error, string_format("SDL could not initialize! SDL_Error: %s", SDL_GetError()));
-        return;
+        return false;
     }
 
     if (SDL_InitSubSystem(SDL_INIT_AUDIO))
@@ -182,8 +182,14 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
 
     this->mFullscreen = false;
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_LoadLibrary(NULL);
+
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     Logger::Log(Logger::Info, "Creating Window...");
     this->mWindow = SDL_CreateWindow(
@@ -201,16 +207,6 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
         return false;
     }
     
-    this->mContext = SDL_GL_CreateContext(this->mWindow);
-
-    if (this->mContext == NULL)
-    {
-        Logger::Log(Logger::Error, string_format( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError()));
-        return false;
-    }
-
-    //TODO, TODO
-
     Logger::Log(Logger::Info, "Initializing renderer");
     renderer.Init(*(this->mWindow), SDL_RENDERER_ACCELERATED);
 

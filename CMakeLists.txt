@@ -13,7 +13,10 @@ else ()
   if ((UNIX) AND (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$"))
     message ("Use OpenGL ES")
     add_compile_definitions(USE_OPENGL_ES)
-    set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp")
+    set (RENDERER_SOURCE_FILES 
+    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" 
+    "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp"
+    "./src/Engine/Rendering/OpenGL_ES/glad.c")
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
@@ -39,7 +42,7 @@ if (UNIX)
     set(CMAKE_CXX_COMPILER_ID "Emscripten")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
     
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFULL_ES2 -sMAX_WEBGL_VERSION=2")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFULL_ES2 -sMIN_WEBGL_VERSION=1 -sMAX_WEBGL_VERSION=2 --preload-file Assets")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS=[\"png\"]")
 
   else()
