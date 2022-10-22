@@ -14,11 +14,10 @@ namespace Engine::Rendering
     class Renderer
     {
         private:
-            //SDL_Renderer* mRenderer;
             SDL_GLContext mContext;
             SDL_Window* mWindowReference;
             Shader* mActiveShader;
-            Rectangle mViewPort;
+            Rectangle mViewport;
             bool mRenderTexture;
 
         public:

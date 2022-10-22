@@ -62,7 +62,7 @@ bool Sprite::Load(Texture texture, Renderer &renderer)
     this->mTexture = texture;
 
     this->mSize = this->mTexture.GetSize();
-    this->sourceRectangle = Rectangle(0, 0, mSize.X, mSize.Y);
+    this->sourceRectangle = Rectangle(0, 0, this->mSize.X, this->mSize.Y);
     this->origin = Vector2f(0,0);
 
     this->mColor.R = 1;

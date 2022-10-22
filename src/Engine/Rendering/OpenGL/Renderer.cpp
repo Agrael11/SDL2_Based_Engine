@@ -82,16 +82,16 @@ void Renderer::Clean(Colorf &color)
 void Renderer::SetViewport(int x, int y, int width, int height)
 {
     glViewport(x, y, width, height);
-    this->mViewPort.X = x;
-    this->mViewPort.Y = y;
-    this->mViewPort.Width = width;
-    this->mViewPort.Height = height;
+    this->mViewport.X = x;
+    this->mViewport.Y = y;
+    this->mViewport.Width = width;
+    this->mViewport.Height = height;
 }
 
     
 Rectangle Renderer::GetViewport()
 {
-    return this->mViewPort;
+    return this->mViewport;
 }
 
 bool Renderer::SetRenderTarget(RenderTexture &texture)
