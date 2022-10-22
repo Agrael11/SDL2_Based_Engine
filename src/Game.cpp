@@ -119,17 +119,15 @@ void Game::Init()
 
 void Game::LoadContent()
 {
+    #ifndef USE_SDL2D
     this->mShader.LoadFromFile("Assets/mainShader.vert", "Assets/mainShader.frag");
+    #endif
+
     this->mainRenderTexture.Create(64, 64, renderer);
-    printf("MainRenderTexture ID: %d\n", this->blackSquareTexture.GetHandle());
     this->blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
-    printf("BlackSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
     this->blueSquareTexture = this->BuildTexture(4,4,this->mColorDarkBlue);
-    printf("BlueSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
     this->greenSquareTexture = this->BuildTexture(4,4,this->mColorLightGreen);
-    printf("GreenSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
     this->backgroundImageTexture.Load("Assets/BG.png", renderer);
-    printf("BackgroundTexture ID: %d\n", this->blackSquareTexture.GetHandle());
 
     this->mainTarget.Load(this->mainRenderTexture, renderer);
     this->blackSquare.Load(this->blackSquareTexture, renderer);
@@ -147,7 +145,9 @@ void Game::Draw(double delta)
     this->renderer.SetRenderTarget(this->mainRenderTexture);
     this->renderer.Begin();
     this->renderer.Clean(this->mColorDarkRed);
+    #ifndef USE_SDL2D
     this->renderer.SetActiveShader(&this->mShader);
+    #endif
     Rectangle pos = Rectangle(0,0,64,64);
 
     this->renderer.DrawSprite(this->backgroundImage, pos);
@@ -156,6 +156,11 @@ void Game::Draw(double delta)
     
     pos.X = point.X * TILE_SIZE;
     pos.Y = (PLAY_SIZE-point.Y-1) * TILE_SIZE;
+    #ifdef USE_SDL2D
+    pos.Y = point.Y * TILE_SIZE;
+    #else
+    pos.Y = (PLAY_SIZE-point.Y-1) * TILE_SIZE;
+    #endif
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
 
@@ -167,7 +172,11 @@ void Game::Draw(double delta)
     for (Vector2 tail : this->tails)
     {
         pos.X = tail.X * TILE_SIZE;
+        #ifdef USE_SDL2D
+        pos.Y = tail.Y * TILE_SIZE;
+        #else
         pos.Y = (PLAY_SIZE-tail.Y-1) * TILE_SIZE;
+        #endif
         pos.Width = TILE_SIZE;
         pos.Height = TILE_SIZE;
 
@@ -177,7 +186,11 @@ void Game::Draw(double delta)
     //Draw Head
 
     pos.X = this->playerPos.X * TILE_SIZE;
+    #ifdef USE_SDL2D
+    pos.Y = this->playerPos.Y * TILE_SIZE;
+    #else
     pos.Y = (PLAY_SIZE-this->playerPos.Y-1) * TILE_SIZE;
+    #endif
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
     
