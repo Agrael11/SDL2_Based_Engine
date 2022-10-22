@@ -66,15 +66,6 @@ bool Renderer::DrawSprite(Sprite &sprite, Rectangle &destination, Rectangle *sou
     return sprite.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
 }
 
-bool Renderer::DrawRenderTexture(RenderTexture &renderTexture, Rectangle &destination, Rectangle *source, double rotation, bool flipHorizontal, bool flipVertical)
-{
-    if (source == NULL)
-    {
-        return renderTexture.Draw(destination, *this, rotation, flipHorizontal, flipVertical);
-    }
-    return renderTexture.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
-}
-
 void Renderer::Clean(Color &color)
 {
     Colorf colorf = color.GetColorf();

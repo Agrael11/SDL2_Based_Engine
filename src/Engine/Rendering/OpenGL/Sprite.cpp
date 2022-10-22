@@ -11,9 +11,6 @@
 
 #include "../../Math/Colorf.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 using namespace Engine::Helper;
 using namespace Engine::Rendering;
 using namespace Engine::Math;
@@ -60,42 +57,12 @@ void Sprite::mBuildVAO()
     glEnableVertexAttribArray(2);
 }
 
-bool Sprite::Load(std::string filePath, Renderer &renderer)
+bool Sprite::Load(Texture texture, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, string_format("Loading texture %s...", filePath.c_str()));
+    this->mTexture = texture;
 
-    int sizeX = 0;
-    int sizeY = 0;
-    int nrChannels;
-
-    glGenTextures(1, &this->mTexture);
-    glBindTexture(GL_TEXTURE_2D, this->mTexture);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(filePath.c_str(), &sizeX, &sizeY, &nrChannels, 0);
-    if (data)
-    {
-        if (nrChannels == 3)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sizeX, sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        }
-        else if (nrChannels == 4)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sizeX, sizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);   
-        }
-    }
-    else
-    {
-        Logger::Log(Logger::Error, "Failed to load texture.");
-    }
-
-    this->sourceRectangle = Rectangle(0, 0, sizeX, sizeY);
-    this->mSize = Vector2(sizeX, sizeY);
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = Rectangle(0, 0, mSize.X, mSize.Y);
     this->origin = Vector2f(0,0);
 
     this->mColor.R = 1;
@@ -104,46 +71,15 @@ bool Sprite::Load(std::string filePath, Renderer &renderer)
     this->mColor.A = 1;
     this->mBuildVAO();
 
-    stbi_image_free(data);
-
     return true;
 }
 
-bool Sprite::Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer)
-{Logger::Log(Logger::Info, string_format("Loading texture %s...", filePath.c_str()));
+bool Sprite::Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer)
+{
+    this->mTexture = texture;
 
-    int sizeX = 0;
-    int sizeY = 0;
-    int nrChannels;
-
-    glGenTextures(1, &this->mTexture);
-    glBindTexture(GL_TEXTURE_2D, this->mTexture);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(filePath.c_str(), &sizeX, &sizeY, &nrChannels, 0);
-    if (data)
-    {
-        if (nrChannels == 3)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sizeX, sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        }
-        else if (nrChannels == 4)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sizeX, sizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);   
-        }
-    }
-    else
-    {
-        Logger::Log(Logger::Error, "Failed to load texture.");
-    }
-
+    this->mSize = this->mTexture.GetSize();
     this->sourceRectangle = sourceRectangle;
-    this->mSize = Vector2(sizeX, sizeY);
     this->origin = Vector2f(0,0);
 
     this->mColor.R = 1;
@@ -152,10 +88,14 @@ bool Sprite::Load(std::string filePath, Rectangle sourceRectangle, Renderer &ren
     this->mColor.A = 1;
     this->mBuildVAO();
 
-    stbi_image_free(data);
-
     return true;
 }
+
+Texture* Sprite::GetTexture()
+{
+    return &this->mTexture;
+}
+
 void Sprite::SetOrigin(float x, float y)
 {
     this->origin.X = x;
@@ -229,7 +169,7 @@ bool Sprite::Draw(Rectangle &destinationRectangle, Renderer &renderer, double ro
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->mTexture);
+    glBindTexture(GL_TEXTURE_2D, this->mTexture.GetHandle());
     glBindVertexArray(this->mVAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
@@ -271,7 +211,7 @@ bool Sprite::Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, R
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->mTexture);
+    glBindTexture(GL_TEXTURE_2D, this->mTexture.GetHandle());
     glBindVertexArray(this->mVAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
@@ -312,6 +252,5 @@ bool Sprite::SetColorMod(Colorf &color)
 
 void Sprite::Unload()
 {
-    glDeleteTextures(1, &this->mTexture);
-    this->mTexture = NULL;
+    this->mTexture.Unload();
 }

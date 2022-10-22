@@ -14,16 +14,16 @@ else ()
     message ("Use OpenGL ES")
     add_compile_definitions(USE_OPENGL_ES)
     set (RENDERER_SOURCE_FILES 
-    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" 
+    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" 
     "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp"
     "./src/Engine/Rendering/OpenGL_ES/glad.c")
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
     set (RENDERER_SOURCE_FILES
-     "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp"
-      "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" 
-      "./src/Engine/Rendering/OpenGL/glad.c")
+    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/Sprite.cpp"
+    "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" 
+    "./src/Engine/Rendering/OpenGL/glad.c")
   endif()
 endif()
 

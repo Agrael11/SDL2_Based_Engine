@@ -28,7 +28,6 @@ namespace Engine::Rendering
             void Begin();
             void End();
             bool DrawSprite(Sprite &sprite, Engine::Math::Rectangle &destination, Engine::Math::Rectangle *source = NULL, double rotation = 0, bool flipHorizontal = false, bool flipVertical = false);
-            bool DrawRenderTexture(RenderTexture &renderTexture, Engine::Math::Rectangle &destination, Engine::Math::Rectangle *source = NULL, double rotation = 0, bool flipHorizontal = false, bool flipVertical = false);
             void Clean(Color &color);
             void Clean(Colorf &color);
             void SetViewport(int x, int y, int width, int height);

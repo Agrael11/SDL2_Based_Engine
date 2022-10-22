@@ -8,6 +8,7 @@
 #include "Engine/Helper/format.h"
 #include "Engine/Audio/Audio.h"
 #include "Engine/Support.h"
+#include "Engine/Rendering/ImageTexture.h"
 
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
@@ -106,7 +107,7 @@ void Game::Init()
         InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     }
     
-    this->mColorBlack = Colorf(0,0,0,1.0f);
+    this->mColorBlack = Colorf(0.8f,0.8f,0.8f,1.0f);
     this->mColorDarkGray = Colorf(0.1f,0.1f,0.1f,1.0f);
     this->mColorDarkBlue = Colorf(0.1f,0.1f,1.0f,1.0f);
     this->mColorDarkRed = Colorf(0.3f,0.1f,0.1f,1.0f);
@@ -119,27 +120,38 @@ void Game::Init()
 void Game::LoadContent()
 {
     this->mShader.LoadFromFile("Assets/mainShader.vert", "Assets/mainShader.frag");
+    this->mainRenderTexture.Create(64, 64, renderer);
+    printf("MainRenderTexture ID: %d\n", this->blackSquareTexture.GetHandle());
+    this->blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
+    printf("BlackSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
+    this->blueSquareTexture = this->BuildTexture(4,4,this->mColorDarkBlue);
+    printf("BlueSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
+    this->greenSquareTexture = this->BuildTexture(4,4,this->mColorLightGreen);
+    printf("GreenSquareTexture ID: %d\n", this->blackSquareTexture.GetHandle());
+    this->backgroundImageTexture.Load("Assets/BG.png", renderer);
+    printf("BackgroundTexture ID: %d\n", this->blackSquareTexture.GetHandle());
 
-    this->mainTarget.Create(64, 64, renderer);
-    this->blackSquare = this->BuildTexture(4,4,this->mColorDarkGray);
-    this->blueSquare = this->BuildTexture(4,4,this->mColorDarkBlue);
-    this->greenSquare = this->BuildTexture(4,4,this->mColorLightGreen);
+    this->mainTarget.Load(this->mainRenderTexture, renderer);
+    this->blackSquare.Load(this->blackSquareTexture, renderer);
+    this->blueSquare.Load(this->blueSquareTexture, renderer);
+    this->greenSquare.Load(this->greenSquareTexture, renderer);
     this->greenSquare.SetOrigin(0.5f, 0.5f);
-    this->backgroundImage.Load("Assets/BG.png", renderer);
+
+    this->backgroundImage.Load(this->backgroundImageTexture, renderer);
     Colorf cMod(0.1f,0.1f,0.1f,1.f);
     this->backgroundImage.SetColorMod(cMod);
 }
 
 void Game::Draw(double delta)
 {
-    this->renderer.SetRenderTarget(mainTarget);
+    this->renderer.SetRenderTarget(this->mainRenderTexture);
     this->renderer.Begin();
     this->renderer.Clean(this->mColorDarkRed);
     this->renderer.SetActiveShader(&this->mShader);
     Rectangle pos = Rectangle(0,0,64,64);
 
     this->renderer.DrawSprite(this->backgroundImage, pos);
-    
+
     //Draw point
     
     pos.X = point.X * TILE_SIZE;
@@ -147,8 +159,9 @@ void Game::Draw(double delta)
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
 
-    this->renderer.DrawRenderTexture(greenSquare, pos, NULL, rotato, false, false);
+    this->renderer.DrawSprite(this->greenSquare, pos, NULL, rotato, false, false);
     
+
     //Draw tail
     
     for (Vector2 tail : this->tails)
@@ -158,7 +171,7 @@ void Game::Draw(double delta)
         pos.Width = TILE_SIZE;
         pos.Height = TILE_SIZE;
 
-        this->renderer.DrawRenderTexture(blueSquare, pos);
+        this->renderer.DrawSprite(this->blueSquare, pos);
     }
 
     //Draw Head
@@ -168,11 +181,10 @@ void Game::Draw(double delta)
     pos.Width = TILE_SIZE;
     pos.Height = TILE_SIZE;
     
-    this->renderer.DrawRenderTexture(blackSquare, pos);
+    this->renderer.DrawSprite(this->blackSquare, pos);
 
     this->renderer.End();
 
-    
 
     //Draw canvas
     
@@ -187,7 +199,7 @@ void Game::Draw(double delta)
         pos.Y = (this->windowHeight-this->windowWidth)/2;
         pos.Width = this->windowWidth;
         pos.Height = this->windowWidth;
-        this->renderer.DrawRenderTexture(mainTarget, pos);
+        this->renderer.DrawSprite(mainTarget, pos);
     }
     else
     {
@@ -195,7 +207,7 @@ void Game::Draw(double delta)
         pos.Y = 0;
         pos.Width = this->windowHeight;
         pos.Height = this->windowHeight;
-        this->renderer.DrawRenderTexture(mainTarget, pos);
+        this->renderer.DrawSprite(mainTarget, pos);
     }
     
     this->renderer.End();

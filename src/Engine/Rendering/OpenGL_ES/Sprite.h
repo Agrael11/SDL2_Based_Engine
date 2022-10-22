@@ -1,13 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
 
 #include "../../Math/Rectangle.h"
 #include "../../Math/Vector2.h"
 #include "../../Math/Vector2f.h"
 #include "../../Math/Colorf.h"
+#include "Texture.h"
 #include "Shader.h"
 
 using namespace Engine::Math;
@@ -23,7 +22,7 @@ namespace Engine::Rendering
     class Sprite
     {
     private:
-        unsigned int mTexture;
+        Texture mTexture;
         Vector2 mSize;
         Colorf mColor;
         
@@ -35,8 +34,9 @@ namespace Engine::Rendering
         Rectangle sourceRectangle;
         Vector2f origin;
 
-        bool Load(std::string filePath, Renderer &renderer);
-        bool Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer);
+        bool Load(Texture texture, Renderer &renderer);
+        bool Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer);
+        Texture* GetTexture();
         void SetOrigin(float x, float y);
         void SetSourceRectangle(Rectangle &r);
         int GetWidth();

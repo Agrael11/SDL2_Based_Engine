@@ -5,6 +5,7 @@
 #include "Engine/BaseGame.h"
 #include "Engine/Rendering/Sprite.h"
 #include "Engine/Rendering/RenderTexture.h"
+#include "Engine/Rendering/ImageTexture.h"
 #include "Engine/Rendering/Shader.h"
 #include "Engine/Audio/Music.h"
 #include "Engine/Audio/Sound.h"
@@ -31,10 +32,15 @@ private:
     Engine::Rendering::Shader mShader;
     
 public:
-    Engine::Rendering::RenderTexture mainTarget;
-    Engine::Rendering::RenderTexture blackSquare;
-    Engine::Rendering::RenderTexture blueSquare;
-    Engine::Rendering::RenderTexture greenSquare;
+    Engine::Rendering::RenderTexture mainRenderTexture;
+    Engine::Rendering::RenderTexture blackSquareTexture;
+    Engine::Rendering::RenderTexture blueSquareTexture;
+    Engine::Rendering::RenderTexture greenSquareTexture;
+    Engine::Rendering::ImageTexture backgroundImageTexture;
+    Engine::Rendering::Sprite mainTarget;
+    Engine::Rendering::Sprite blackSquare;
+    Engine::Rendering::Sprite blueSquare;
+    Engine::Rendering::Sprite greenSquare;
     Engine::Rendering::Sprite backgroundImage;
 
     Engine::Math::Vector2 playerPos;
