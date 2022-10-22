@@ -101,11 +101,11 @@ void Run()
 
 int main(int argc, char *args[])
 {
-
     Logger::MinimumPrintLevel = Logger::Debug;
     Logger::MinimumFileLevel = Logger::Debug;
     Logger::FileName = "Log.log";
-    Logger::PrintToFile = true;
+    Logger::PrintToFile = false;
+    Logger::SaveTimedCopy = false;
     Logger::OverrideFile = true;
 
     Game tempGame = Game(640, 480, "Test Window");
