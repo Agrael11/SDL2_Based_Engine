@@ -7,7 +7,8 @@
 #include "../../Math/Rectangle.h"
 #include "../../Math/Vector2.h"
 #include "../../Math/Vector2f.h"
-#include "../../Math/Color.h"
+#include "../../Math/Colorf.h"
+#include "Texture.h"
 
 using namespace Engine::Math;
 
@@ -22,23 +23,26 @@ namespace Engine::Rendering
     class Sprite
     {
     private:
-        SDL_Texture* mTexture;
+        Texture mTexture;
         Vector2 mSize;
+        Colorf mColor;
 
     public:
         Rectangle sourceRectangle;
         Vector2f origin;
 
-        bool Load(std::string filePath, Renderer &renderer);
-        bool Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer);
+        bool Load(Texture texture, Renderer &renderer);
+        bool Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer);
+        Texture* GetTexture();
         void SetOrigin(float x, float y);
+        void SetSourceRectangle(Rectangle &r);
         int GetWidth();
         int GetHeight();
         Vector2* GetSize();
         bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool SetBlendMode(BlendMode::BlendMode mode);
-        bool SetColorMod(Color &color);
+        bool SetColorMod(Colorf &color);
         void Unload();
     };
 };

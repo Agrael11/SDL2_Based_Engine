@@ -34,29 +34,36 @@ bool Renderer::DrawSprite(Sprite &sprite, Rectangle &destination, Rectangle *sou
     return sprite.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
 }
 
-bool Renderer::DrawRenderTexture(RenderTexture &renderTexture, Rectangle &destination, Rectangle *source, double rotation, bool flipHorizontal, bool flipVertical)
-{
-    if (source == NULL)
-    {
-        return renderTexture.Draw(destination, *this, rotation, flipHorizontal, flipVertical);
-    }
-    return renderTexture.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
-}
-
 void Renderer::Clean(Color &color)
 {
     SDL_SetRenderDrawColor(this->mRenderer, color.R, color.G, color.B, color.A);
     SDL_RenderClear(this->mRenderer);
 }
+
+void Renderer::Clean(Colorf &color)
+{
+    Color tempColor = color.GetColor();
+    SDL_SetRenderDrawColor(this->mRenderer, tempColor.R, tempColor.G, tempColor.B, tempColor.A);
+    SDL_RenderClear(this->mRenderer);
+}
     
 void Renderer::SetViewport(int x, int y, int width, int height)
 {
+    this->mViewport.X = x;
+    this->mViewport.Y = y;
+    this->mViewport.Width = width;
+    this->mViewport.Height = height;
     SDL_Rect viewport;
     viewport.x = x;
     viewport.y = y;
     viewport.w = width;
     viewport.h = height;
     SDL_RenderSetViewport(this->mRenderer, &viewport);
+}
+
+Rectangle Renderer::GetViewport()
+{
+    return this->mViewport;
 }
 
 bool Renderer::SetRenderTarget(RenderTexture &texture)
@@ -77,4 +84,15 @@ void Renderer::Destroy()
 {
     SDL_DestroyRenderer(this->mRenderer);
     this->mRenderer = NULL;
+}
+
+void Renderer::SetActiveShader(Shader* shader)
+{
+    this->mActiveShader = shader;
+    this->mActiveShader->UseShader();
+}
+
+Shader* Renderer::GetActiveShader()
+{
+    return this->mActiveShader;
 }

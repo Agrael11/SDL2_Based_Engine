@@ -3,54 +3,49 @@
 #include "../../Helper/format.h"
 #include "Renderer.h"
 #include "../../Math/MathHelper.h"
+#include "../../Math/Color.h"
 
 using namespace Engine::Helper;
 using namespace Engine::Rendering;
 using namespace Engine::Math;
 
-bool Sprite::Load(std::string filePath, Renderer &renderer)
+bool Sprite::Load(Texture texture, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, string_format("Loading texture %s...", filePath.c_str()));
-    this->mTexture = IMG_LoadTexture(renderer.GetSDL_Renderer(), filePath.c_str());
+    this->mTexture = texture;
 
-    if (this->mTexture == NULL)
-    {
-        Logger::Log(Logger::Error, string_format("Unable to load texture from file %s! SDL Error: %s", filePath.c_str(), SDL_GetError()));
-        return false;
-    }
-
-    int sizeX = 0;
-    int sizeY = 0;
-    
-    SDL_QueryTexture(this->mTexture, NULL, NULL, &sizeX, &sizeY);
-
-    this->sourceRectangle = Rectangle(0, 0, sizeX, sizeY);
-    this->mSize = Vector2(sizeX, sizeY);
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = Rectangle(0, 0, this->mSize.X, this->mSize.Y);
     this->origin = Vector2f(0,0);
+
+    this->mColor.R = 1;
+    this->mColor.G = 1;
+    this->mColor.B = 1;
+    this->mColor.A = 1;
 
     return true;
 }
 
-bool Sprite::Load(std::string filePath, Rectangle sourceRectangle, Renderer &renderer)
+bool Sprite::Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer)
 {
-    this->mTexture = IMG_LoadTexture(renderer.GetSDL_Renderer(), filePath.c_str());
-
-    if (this->mTexture == NULL)
-    {
-        Logger::Log(Logger::Error, string_format("Unable to load texture from file %s! SDL Error: %s", filePath.c_str(), SDL_GetError()));
-        return false;
-    }
+    this->mTexture = texture;
 
     this->mSize = Vector2(0, 0);
-  
-    SDL_QueryTexture(this->mTexture, NULL, NULL, &this->mSize.X, &this->mSize.Y);
-
     this->sourceRectangle = sourceRectangle;
-
     this->origin = Vector2f(0,0);
+
+    this->mColor.R = 1;
+    this->mColor.G = 1;
+    this->mColor.B = 1;
+    this->mColor.A = 1;
 
     return true;
 }
+
+Texture* Sprite::GetTexture()
+{
+    return &this->mTexture;
+}
+
 void Sprite::SetOrigin(float x, float y)
 {
     this->origin.X = x;
@@ -85,7 +80,7 @@ bool Sprite::Draw(Rectangle &destinationRectangle, Renderer &renderer, double ro
     SDL_Rect srcRect = this->sourceRectangle.GetSDL_Rect();
     SDL_Rect dstRect = destinationRectangle.GetSDL_Rect();
 
-    if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture, &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
+    if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture.GetHandle(), &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
         return false;
@@ -106,7 +101,7 @@ bool Sprite::Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, R
     SDL_Rect srcRect = sourceRectangle.GetSDL_Rect();
     SDL_Rect dstRect = destinationRectangle.GetSDL_Rect();
 
-    if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture, &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
+    if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture.GetHandle(), &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
         return false;
@@ -133,7 +128,7 @@ bool Sprite::SetBlendMode(BlendMode::BlendMode mode)
         bMode = SDL_BLENDMODE_NONE;
         break;
     }
-    if (SDL_SetTextureBlendMode(this->mTexture, bMode) != 0)
+    if (SDL_SetTextureBlendMode(this->mTexture.GetHandle(), bMode) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to set texture blend mode! SDL Error: %s", SDL_GetError()));
         return false;
@@ -141,23 +136,26 @@ bool Sprite::SetBlendMode(BlendMode::BlendMode mode)
     return true;
 }
 
-bool Sprite::SetColorMod(Color &color)
+bool Sprite::SetColorMod(Colorf &color)
 {
-    if (SDL_SetTextureColorMod(this->mTexture, color.R, color.G, color.B) != 0)
+    Color tempC = color.GetColor();
+    if (SDL_SetTextureColorMod(this->mTexture.GetHandle(), tempC.R, tempC.G, tempC.B) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to set texture color mod! SDL Error: %s", SDL_GetError()));
         return false;
     }
-        if (SDL_SetTextureAlphaMod(this->mTexture, color.A) != 0)
+        if (SDL_SetTextureAlphaMod(this->mTexture.GetHandle(), tempC.A) != 0)
     {
         Logger::Log(Logger::Error, string_format("Unable to set texture alpha mod! SDL Error: %s", SDL_GetError()));
         return false;
     }
+
+    this->mColor = color;
+
     return true;
 }
 
 void Sprite::Unload()
 {
-    SDL_DestroyTexture(this->mTexture);
-    this->mTexture = NULL;
+    this->mTexture.Unload();
 }

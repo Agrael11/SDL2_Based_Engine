@@ -3,12 +3,14 @@ set(PROJECT_AND_EXECATUBLE_NAME SDL_Engine_Base)
 project(${PROJECT_AND_EXECATUBLE_NAME})
 set (CMAKE_CXX_STANDARD 17)
 
-set (USE_SDL2D false)
+set (USE_SDL2D true)
 
 if (USE_SDL2D)
   message("Use SDL2D")
   add_compile_definitions(USE_SDL2D)
-  set (RENDERER_SOURCE_FILES "./src/Engine/Rendering/2D/Sprite.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/Renderer.cpp")
+  set (RENDERER_SOURCE_FILES 
+  "./src/Engine/Rendering/2D/Texture.cpp" "./src/Engine/Rendering/2D/ImageTexture.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/Sprite.cpp" 
+  "./src/Engine/Rendering/2D/Renderer.cpp" "./src/Engine/Rendering/2D/Shader.cpp")
 else ()
   if ((UNIX) AND (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$"))
     message ("Use OpenGL ES")
