@@ -70,6 +70,7 @@ void Game::ResetGame()
     this->tails.clear();
 
     this->timer = 0;
+    this->score = 0;
 }
 
 void Game::Move(int dir)
@@ -138,6 +139,16 @@ void Game::LoadContent()
     this->backgroundImage.Load(this->backgroundImageTexture, renderer);
     Colorf cMod(0.1f,0.1f,0.1f,1.f);
     this->backgroundImage.SetColorMod(cMod);
+
+    this->font.Load("Assets/turpis.ttf", 8, renderer);
+    int wrap = this->windowWidth - 20;
+    if (this->windowWidth > this->windowHeight)
+    {
+        wrap = this->windowHeight - 20;
+    }
+    Color white(255,255,255,255);
+    this->textTexture.Generate("Lorem Ipsum, Hnedá líška vraj vie skákať, lol!", this->font, white, renderer, wrap);
+    this->text.Load(this->textTexture, renderer);
 }
 
 void Game::Draw(double delta)
@@ -196,6 +207,22 @@ void Game::Draw(double delta)
     
     this->renderer.DrawSprite(this->blackSquare, pos);
 
+    int wrap = 62;
+    Color white(255,255,255,255);
+    this->textTexture.Generate(string_format("%d", this->score), this->font, white, renderer, wrap);
+    this->text.SetTexture(this->textTexture);
+    
+    pos.X = 1;
+    #if USE_SDL2D
+    pos.Y = 1;
+    #else
+    pos.Y = 63-this->text.GetHeight();
+    #endif
+    pos.Width = (int)(this->text.GetHeight() * this->text.GetRatio());
+    pos.Height = this->text.GetHeight();
+    
+    this->renderer.DrawSprite(this->text, pos);
+
     this->renderer.End();
 
 
@@ -222,7 +249,7 @@ void Game::Draw(double delta)
         pos.Height = this->windowHeight;
         this->renderer.DrawSprite(mainTarget, pos);
     }
-    
+
     this->renderer.End();
     
 }
@@ -355,6 +382,7 @@ bool Game::Update(double delta)
         {
             this->tailLength++;
             this->GeneratePoint();
+            this->score += 10;
         }
 
     }

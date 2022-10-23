@@ -11,6 +11,8 @@
 #include <SDL_opengles2.h>
 #endif
 
+#include <SDL_ttf.h>
+
 using namespace Engine;
 using namespace Engine::Helper;
 
@@ -32,6 +34,8 @@ void BaseGame::Load(int width, int height, std::string windowTitle)
     #ifdef USE_OPENGL_ES
     this->Load_OpenGL_ES(width, height, windowTitle);
     #endif
+
+    TTF_Init();
 }
 
 #ifdef USE_SDL2D
@@ -331,5 +335,6 @@ void BaseGame::Unload()
     SDL_DestroyWindow(this->mWindow);
     this->mWindow = NULL;
     Logger::Log(Logger::Info, "Quitting SDL2...");
+    TTF_Quit();
     SDL_Quit();
 }

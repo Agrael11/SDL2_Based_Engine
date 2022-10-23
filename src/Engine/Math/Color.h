@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 namespace Engine::Math
 {
     class Colorf;
@@ -15,5 +17,6 @@ namespace Engine::Math
         Color(int r, int g, int b, int a);
 
         Colorf GetColorf();
+        SDL_Color GetSDL_Color();
     };
 };

@@ -23,3 +23,13 @@ Colorf Color::GetColorf()
 {
     return Colorf((float)(this->R/255.0f),(float)(this->G/255.0f),(float)(this->B/255.0f),(float)(this->A/255.0f));
 }
+
+SDL_Color Color::GetSDL_Color()
+{
+    SDL_Color color;
+    color.r = this->R;
+    color.g = this->G;
+    color.b = this->B;
+    color.a = this->A;
+    return color;
+}

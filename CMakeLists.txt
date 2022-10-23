@@ -3,28 +3,28 @@ set(PROJECT_AND_EXECATUBLE_NAME SDL_Engine_Base)
 project(${PROJECT_AND_EXECATUBLE_NAME})
 set (CMAKE_CXX_STANDARD 17)
 
-set (USE_SDL2D true)
+set (USE_SDL2D false)
 
 if (USE_SDL2D)
   message("Use SDL2D")
   add_compile_definitions(USE_SDL2D)
   set (RENDERER_SOURCE_FILES 
-  "./src/Engine/Rendering/2D/Texture.cpp" "./src/Engine/Rendering/2D/ImageTexture.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/Sprite.cpp" 
-  "./src/Engine/Rendering/2D/Renderer.cpp" "./src/Engine/Rendering/2D/Shader.cpp")
+  "./src/Engine/Rendering/2D/Texture.cpp" "./src/Engine/Rendering/2D/ImageTexture.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/TtfTexture.cpp"
+  "./src/Engine/Rendering/2D/Sprite.cpp" "./src/Engine/Rendering/2D/Renderer.cpp" "./src/Engine/Rendering/2D/Shader.cpp" "./src/Engine/Rendering/2D/TtfFont.cpp")
 else ()
   if ((UNIX) AND (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$"))
     message ("Use OpenGL ES")
     add_compile_definitions(USE_OPENGL_ES)
     set (RENDERER_SOURCE_FILES 
-    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp" 
-    "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp"
+    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp"  "./src/Engine/Rendering/OpenGL_ES/TtfTexture.cpp"
+    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp" "./src/Engine/Rendering/OpenGL_ES/TtfFont.cpp"
     "./src/Engine/Rendering/OpenGL_ES/glad.c")
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
     set (RENDERER_SOURCE_FILES
-    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/Sprite.cpp"
-    "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" 
+    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/TtfTexture.cpp"
+    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp"
     "./src/Engine/Rendering/OpenGL/glad.c")
   endif()
 endif()
@@ -44,8 +44,8 @@ if (UNIX)
     set(CMAKE_CXX_COMPILER_ID "Emscripten")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
     
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFULL_ES2 -sMIN_WEBGL_VERSION=1 -sMAX_WEBGL_VERSION=2 --preload-file Assets")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS=[\"png\"]")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFULL_ES3 -sMIN_WEBGL_VERSION=1 -sMAX_WEBGL_VERSION=2 --preload-file Assets")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_TTF=2 -s USE_SDL_NET=2 -s USE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -s SDL2_IMAGE_FORMATS=[\"png\"]")
 
   else()
     message("UNIX")
