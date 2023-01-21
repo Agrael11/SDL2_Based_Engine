@@ -37,10 +37,13 @@ namespace Engine::Rendering
         bool Load(Texture texture, Renderer &renderer);
         bool Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer);
         Texture* GetTexture();
+        void SetTexture(Texture texture);
+        void SetTexture(Texture texture, Rectangle sourceRectangle);
         void SetOrigin(float x, float y);
         void SetSourceRectangle(Rectangle &r);
         int GetWidth();
         int GetHeight();
+        float GetRatio();
         Vector2* GetSize();
         bool Draw(Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);
         bool Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, Renderer &renderer, double rotationRad = 0, bool flipHorizontal = false, bool flipVertical = false);

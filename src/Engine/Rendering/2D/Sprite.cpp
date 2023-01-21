@@ -46,6 +46,22 @@ Texture* Sprite::GetTexture()
     return &this->mTexture;
 }
 
+void Sprite::SetTexture(Texture texture)
+{
+    this->mTexture = texture;
+
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = Rectangle(0, 0, this->mSize.X, this->mSize.Y);
+}
+
+void Sprite::SetTexture(Texture texture, Rectangle sourceRectangle)
+{
+    this->mTexture = texture;
+
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = sourceRectangle;
+}
+
 void Sprite::SetOrigin(float x, float y)
 {
     this->origin.X = x;
@@ -60,6 +76,11 @@ int Sprite::GetWidth()
 int Sprite::GetHeight()
 {
     return this->mSize.Y;
+}
+
+float Sprite::GetRatio()
+{
+    return (float)this->mSize.X / (float)this->mSize.Y;
 }
 
 Vector2* Sprite::GetSize()

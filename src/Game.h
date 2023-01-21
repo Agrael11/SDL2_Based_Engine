@@ -11,6 +11,8 @@
 #include "Engine/Audio/Sound.h"
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
+#include "Engine/Rendering/TtfFont.h"
+#include "Engine/Rendering/FontTexture.h"
 
 #define START_LENGTH 4
 #define MAX_TIMER 250
@@ -37,6 +39,9 @@ public:
     Engine::Rendering::RenderTexture blueSquareTexture;
     Engine::Rendering::RenderTexture greenSquareTexture;
     Engine::Rendering::ImageTexture backgroundImageTexture;
+    Engine::Rendering::TtfFont font;
+    Engine::Rendering::FontTexture textTexture;
+    Engine::Rendering::Sprite text;
     Engine::Rendering::Sprite mainTarget;
     Engine::Rendering::Sprite blackSquare;
     Engine::Rendering::Sprite blueSquare;
@@ -53,6 +58,7 @@ public:
     int realLength;
     std::vector<Vector2> tails;
 
+    int score;
     float rotato;
 
 private:

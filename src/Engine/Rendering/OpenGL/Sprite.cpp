@@ -96,6 +96,28 @@ Texture* Sprite::GetTexture()
     return &this->mTexture;
 }
 
+void Sprite::SetTexture(Texture texture)
+{
+    this->mTexture = texture;
+
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = Rectangle(0, 0, this->mSize.X, this->mSize.Y);
+    this->origin = Vector2f(0,0);
+
+    this->mBuildVAO();
+}
+
+void Sprite::SetTexture(Texture texture, Rectangle sourceRectangle)
+{
+    this->mTexture = texture;
+
+    this->mSize = this->mTexture.GetSize();
+    this->sourceRectangle = Rectangle(0, 0, this->mSize.X, this->mSize.Y);
+    this->origin = Vector2f(0,0);
+
+    this->mBuildVAO();
+}
+
 void Sprite::SetOrigin(float x, float y)
 {
     this->origin.X = x;
@@ -116,6 +138,11 @@ int Sprite::GetWidth()
 int Sprite::GetHeight()
 {
     return this->mSize.Y;
+}
+
+float Sprite::GetRatio()
+{
+    return (float)this->mSize.X/(float)this->mSize.Y;
 }
 
 Vector2* Sprite::GetSize()
@@ -168,6 +195,8 @@ bool Sprite::Draw(Rectangle &destinationRectangle, Renderer &renderer, double ro
     unsigned int projectionLoc = glGetUniformLocation(shader->GetHandle(), "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->mTexture.GetHandle());
     glBindVertexArray(this->mVAO);
@@ -210,6 +239,8 @@ bool Sprite::Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, R
     unsigned int projectionLoc = glGetUniformLocation(shader->GetHandle(), "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->mTexture.GetHandle());
     glBindVertexArray(this->mVAO);
