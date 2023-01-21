@@ -10,7 +10,7 @@
 namespace Engine::Rendering
 {
     class Renderer;
-    class TtfTexture: public Texture
+    class FontTexture: public Texture
     {
     private:
         bool mCreated = false;

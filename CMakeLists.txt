@@ -9,22 +9,22 @@ if (USE_SDL2D)
   message("Use SDL2D")
   add_compile_definitions(USE_SDL2D)
   set (RENDERER_SOURCE_FILES 
-  "./src/Engine/Rendering/2D/Texture.cpp" "./src/Engine/Rendering/2D/ImageTexture.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/TtfTexture.cpp"
-  "./src/Engine/Rendering/2D/Sprite.cpp" "./src/Engine/Rendering/2D/Renderer.cpp" "./src/Engine/Rendering/2D/Shader.cpp" "./src/Engine/Rendering/2D/TtfFont.cpp")
+  "./src/Engine/Rendering/2D/Texture.cpp" "./src/Engine/Rendering/2D/ImageTexture.cpp" "./src/Engine/Rendering/2D/RenderTexture.cpp" "./src/Engine/Rendering/2D/FontTexture.cpp"
+  "./src/Engine/Rendering/2D/Sprite.cpp" "./src/Engine/Rendering/2D/Renderer.cpp" "./src/Engine/Rendering/2D/Shader.cpp" "./src/Engine/Rendering/2D/TtfFont.cpp" "./src/Engine/Rendering/2D/BitmapFont.cpp")
 else ()
   if ((UNIX) AND (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$"))
     message ("Use OpenGL ES")
     add_compile_definitions(USE_OPENGL_ES)
     set (RENDERER_SOURCE_FILES 
-    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp"  "./src/Engine/Rendering/OpenGL_ES/TtfTexture.cpp"
-    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp" "./src/Engine/Rendering/OpenGL_ES/TtfFont.cpp"
+    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp"  "./src/Engine/Rendering/OpenGL_ES/FontTexture.cpp"
+    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp" "./src/Engine/Rendering/OpenGL_ES/TtfFont.cpp" "./src/Engine/Rendering/OpenGL_ES/BitmapFont.cpp"
     "./src/Engine/Rendering/OpenGL_ES/glad.c")
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
     set (RENDERER_SOURCE_FILES
-    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/TtfTexture.cpp"
-    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp"
+    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/FontTexture.cpp"
+    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp" "./src/Engine/Rendering/OpenGL/BitmapFont.cpp"
     "./src/Engine/Rendering/OpenGL/glad.c")
   endif()
 endif()
@@ -51,7 +51,6 @@ if (UNIX)
     message("UNIX")
 
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/linux/")
-    find_library(DL_LIBRARY libdl.so  )
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -73,15 +72,15 @@ endif (WIN32)
 
 
 if (UNIX)
-  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS})
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIR})
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${DL_LIBRARY})
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 endif (UNIX)
 
 if (WIN32)
-  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS})
+  include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_net_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIR} )
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 

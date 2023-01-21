@@ -12,7 +12,7 @@
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
 #include "Engine/Rendering/TtfFont.h"
-#include "Engine/Rendering/TtfTexture.h"
+#include "Engine/Rendering/FontTexture.h"
 
 #define START_LENGTH 4
 #define MAX_TIMER 250
@@ -40,7 +40,7 @@ public:
     Engine::Rendering::RenderTexture greenSquareTexture;
     Engine::Rendering::ImageTexture backgroundImageTexture;
     Engine::Rendering::TtfFont font;
-    Engine::Rendering::TtfTexture textTexture;
+    Engine::Rendering::FontTexture textTexture;
     Engine::Rendering::Sprite text;
     Engine::Rendering::Sprite mainTarget;
     Engine::Rendering::Sprite blackSquare;

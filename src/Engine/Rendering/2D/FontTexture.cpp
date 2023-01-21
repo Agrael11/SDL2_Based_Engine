@@ -1,4 +1,4 @@
-#include "TtfTexture.h"
+#include "FontTexture.h"
 
 #include <iostream>
 
@@ -14,7 +14,7 @@ using namespace Engine::Math;
 using namespace Engine::Helper;
 using namespace Engine::Rendering;
 
-bool TtfTexture::Generate(std::string text, TtfFont font, Engine::Math::Color color, Renderer &renderer, int wrap)
+bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color color, Renderer &renderer, int wrap)
 {
     if (this->mCreated)
     {
@@ -52,7 +52,7 @@ bool TtfTexture::Generate(std::string text, TtfFont font, Engine::Math::Color co
     return true;
 }
 
-void TtfTexture::Unload()
+void FontTexture::Unload()
 {
     SDL_DestroyTexture(this->mTexture);
     this->mTexture = NULL;
