@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "../../Helper/format.h"
+#include "../../Helper/Format.h"
 #include "../../Helper/Logger.h"
 
 using namespace Engine::Helper;
@@ -29,9 +29,9 @@ bool Renderer::DrawSprite(Sprite &sprite, Rectangle &destination, Rectangle *sou
 {
     if (source == NULL)
     {
-        return sprite.Draw(destination, *this, rotation, flipHorizontal, flipVertical);
+        //sprite.Draw(destination, *this, rotation, flipHorizontal, flipVertical);
     }
-    return sprite.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
+    return false;//sprite.Draw(*source, destination, *this, rotation, flipHorizontal, flipVertical);
 }
 
 void Renderer::Clean(Color &color)

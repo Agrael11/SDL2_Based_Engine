@@ -10,8 +10,6 @@
 
 #include "Texture.h"
 
-using namespace Engine::Math;
-
 namespace Engine::Rendering
 {
     class Renderer;
