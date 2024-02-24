@@ -8,7 +8,6 @@
 
 #include "../../Math/Vector2.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/Format.h"
 
 using namespace Engine::Math;
 using namespace Engine::Helper;
@@ -16,7 +15,8 @@ using namespace Engine::Rendering;
 
 bool ImageTexture::Load(std::string filePath, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, string_format("Loading texture %s...", filePath.c_str()));
+    Logger::Log(Logger::Info, "Loading texture %s...", filePath.c_str());
+    this->name = filePath;
 
     int sizeX = 0;
     int sizeY = 0;
@@ -58,5 +58,4 @@ bool ImageTexture::Load(std::string filePath, Renderer &renderer)
 void ImageTexture::Unload()
 {
     glDeleteTextures(1, &this->mTexture);
-    this->mTexture = NULL;
 }

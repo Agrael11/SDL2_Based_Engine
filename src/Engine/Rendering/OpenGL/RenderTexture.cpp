@@ -1,7 +1,6 @@
 #include "RenderTexture.h"
 #include "Renderer.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/format.h"
 #include "../../Math/MathHelper.h"
 
 #include "glad/glad.h"
@@ -52,6 +51,4 @@ void RenderTexture::Unload()
 {
     glDeleteFramebuffers(1, &this->mFrameBuffer);
     glDeleteTextures(1, &this->mTexture);
-    this->mFrameBuffer = NULL;
-    this->mTexture = NULL;
 }

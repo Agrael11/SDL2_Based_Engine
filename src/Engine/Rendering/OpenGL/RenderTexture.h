@@ -11,15 +11,13 @@
 #include "Shader.h"
 #include "Texture.h"
 
-using namespace Engine::Math;
-
 namespace Engine::Rendering
 {
     class Renderer;
     class RenderTexture: public Texture
     {
     private:
-        unsigned int mFrameBuffer;
+        unsigned int mFrameBuffer = -1;
     public:
         bool Create(int width, int height, Renderer &renderer);
         bool SetAsRenderTarget(Renderer &enderer);

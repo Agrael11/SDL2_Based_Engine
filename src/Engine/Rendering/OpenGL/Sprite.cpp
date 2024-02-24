@@ -1,7 +1,6 @@
 #include "Sprite.h"
 #include "Renderer.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/format.h"
 #include "../../Math/MathHelper.h"
 
 #include "glad/glad.h"
@@ -34,19 +33,24 @@ void Sprite::mBuildVAO()
         1, 2, 3
     };
 
+    if (this->mVAOCreated)
+    {
+        glDeleteBuffers(1, &this->mVBO);
+        glDeleteBuffers(1, &this->mEBO);
+        glDeleteVertexArrays(1, &this->mVAO);
+    }
+
     glGenVertexArrays(1, &this->mVAO);
     glBindVertexArray(this->mVAO);
     
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &this->mVBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, this->mVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &this->mEBO);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->mEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
@@ -55,6 +59,7 @@ void Sprite::mBuildVAO()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(7 * sizeof(float)));
     glEnableVertexAttribArray(2);
+    this->mVAOCreated = true;
 }
 
 bool Sprite::Load(Texture texture, Renderer &renderer)
@@ -69,6 +74,7 @@ bool Sprite::Load(Texture texture, Renderer &renderer)
     this->mColor.G = 1;
     this->mColor.B = 1;
     this->mColor.A = 1;
+    this->mVAOCreated = false;
     this->mBuildVAO();
 
     return true;
@@ -86,6 +92,7 @@ bool Sprite::Load(Texture texture, Rectangle sourceRectangle, Renderer &renderer
     this->mColor.G = 1;
     this->mColor.B = 1;
     this->mColor.A = 1;
+    this->mVAOCreated = false;
     this->mBuildVAO();
 
     return true;
@@ -283,5 +290,11 @@ bool Sprite::SetColorMod(Colorf &color)
 
 void Sprite::Unload()
 {
-    this->mTexture.Unload();
+    if (this->mVAOCreated)
+    {
+        glDeleteBuffers(1, &this->mVBO);
+        glDeleteBuffers(1, &this->mEBO);
+        glDeleteVertexArrays(1, &this->mVAO);
+        this->mVAOCreated = false;
+    }
 }

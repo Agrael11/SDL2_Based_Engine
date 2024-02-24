@@ -5,7 +5,7 @@
         #include "OpenGL/Shader.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/Shader.h"
+            #include "OpenGL/Shader.h"
         #endif
     #endif
 #endif

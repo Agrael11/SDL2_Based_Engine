@@ -8,7 +8,6 @@
 
 #include "../../Math/Vector2.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/Format.h"
 
 #include "glad/glad.h"
 
@@ -36,7 +35,7 @@ bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color c
 
     if (textSurface == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Unable to generate texture from font! SDL Error: %s", SDL_GetError()));
+        Logger::Log(Logger::Error, "Unable to generate texture from font! SDL Error: %s", SDL_GetError());
         return false;
     }
 
@@ -70,12 +69,13 @@ bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color c
     this->mSize = Vector2(textSurface->w, textSurface->h);
     this->mCreated = true;
 
+    delete[] data;
+
     return true;
 }
 
 void FontTexture::Unload()
 {
     glDeleteTextures(1, &this->mTexture);
-    this->mTexture = NULL;
     this->mCreated = false;
 }

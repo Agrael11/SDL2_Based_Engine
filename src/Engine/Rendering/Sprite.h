@@ -5,7 +5,7 @@
         #include "OpenGL/Sprite.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/Sprite.h"
+            #include "OpenGL/Sprite.h"
         #endif
     #endif
 #endif

@@ -5,7 +5,6 @@
 
 #include "../../Math/Vector2.h"
 #include "../../Helper/Logger.h"
-#include "../../Helper/Format.h"
 
 using namespace Engine::Math;
 using namespace Engine::Helper;
@@ -34,5 +33,4 @@ Vector2 Texture::GetSize()
 void Texture::Unload()
 {
     glDeleteTextures(1, &this->mTexture);
-    this->mTexture = NULL;
 }

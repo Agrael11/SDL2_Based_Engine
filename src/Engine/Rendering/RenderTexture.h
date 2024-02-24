@@ -5,7 +5,7 @@
         #include "OpenGL/RenderTexture.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/RenderTexture.h"
+            #include "OpenGL/RenderTexture.h"
         #endif
     #endif
 #endif

@@ -10,7 +10,7 @@ namespace Engine::Rendering
     class Texture
     {
     protected:
-        unsigned int mTexture;
+        unsigned int mTexture = -1;
         Engine::Math::Vector2 mSize;
     public:
         int GetWidth();

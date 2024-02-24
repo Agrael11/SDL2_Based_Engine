@@ -5,7 +5,7 @@
         #include "OpenGL/ImageTexture.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/ImageTexture.h"
+            #include "OpenGL/ImageTexture.h"
         #endif
     #endif
 #endif

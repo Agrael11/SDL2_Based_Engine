@@ -12,6 +12,7 @@ namespace Engine::Rendering
     {
     private:
     public:
+        std::string name;
         bool Load(std::string filePath, Renderer &renderer);
         void Unload();
     };

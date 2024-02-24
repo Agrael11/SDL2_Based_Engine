@@ -5,7 +5,7 @@
         #include "OpenGL/FontTexture.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/FontTexture.h"
+            #include "OpenGL/FontTexture.h"
         #endif
     #endif
 #endif

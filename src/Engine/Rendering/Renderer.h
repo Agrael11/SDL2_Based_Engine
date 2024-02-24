@@ -5,7 +5,7 @@
         #include "OpenGL/Renderer.h"
     #else
         #ifdef USE_OPENGL_ES
-            #include "OpenGL_ES/Renderer.h"
+            #include "OpenGL/Renderer.h"
         #endif
     #endif
 #endif
