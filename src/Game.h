@@ -13,6 +13,7 @@
 #include "Engine/Math/Colorf.h"
 #include "Engine/Rendering/TtfFont.h"
 #include "Engine/Rendering/FontTexture.h"
+#include "Engine/Math/Vector2.h"
 
 #define START_LENGTH 4
 #define MAX_TIMER 250
@@ -56,7 +57,7 @@ public:
 
     int tailLength;
     int realLength;
-    std::vector<Vector2> tails;
+    std::vector<Engine::Math::Vector2> tails;
 
     int score;
     float rotato;
@@ -73,7 +74,7 @@ private:
     void ControllerButtonUp(SDL_ControllerButtonEvent e);
 public:
 
-    Engine::Rendering::RenderTexture BuildTexture(int width, int height, Colorf &color);
+    Engine::Rendering::RenderTexture BuildTexture(int width, int height, Engine::Math::Colorf &color);
     void GeneratePoint();
     void ResetGame();
     void Move(int dir);

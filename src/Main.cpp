@@ -8,7 +8,6 @@
 
 #include "Game.h"
 #include "Engine/Helper/Logger.h"
-#include "Engine/Helper/format.h"
 #include "Engine/Support.h"
 
 using namespace Engine::Helper;
@@ -34,11 +33,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerOpen(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, string_format("Error opening controller %d! SDL_Error: %s.", id, SDL_GetError()));
+                    Logger::Log(Logger::Error, "Error opening controller %d! SDL_Error: %s.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, string_format("Opening controller %d (%s)", id, SDL_GameControllerName(controller)));
+                    Logger::Log(Logger::Debug, "Opening controller %d (%s)", id, SDL_GameControllerName(controller));
                 }
                 controllerChanged = true;
             }
@@ -48,11 +47,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerFromInstanceID(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, string_format("Error closing controller %d! SDL_Error: %s.", id, SDL_GetError()));
+                    Logger::Log(Logger::Error, "Error closing controller %d! SDL_Error: %s.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, string_format("Closing controller %d (%s)", id, SDL_GameControllerName(controller)));
+                    Logger::Log(Logger::Debug, "Closing controller %d (%s)", id, SDL_GameControllerName(controller));
                     SDL_GameControllerClose(controller);
                 }
                 controllerChanged = true;
@@ -85,7 +84,7 @@ void Run()
         {
             SDL_GameControllerUpdate();
             changed++;
-            Logger::Log(Logger::Debug, string_format("Rechecking events after controller state change (Repeat: %d)", changed));
+            Logger::Log(Logger::Debug, "Rechecking events after controller state change (Repeat: %d)", changed);
             controllerChanged = false;
             CheckEvents();
         }

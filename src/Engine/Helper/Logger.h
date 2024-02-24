@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "StringHelp.h"
 
 namespace Engine::Helper::Logger
 {
@@ -17,5 +18,13 @@ namespace Engine::Helper::Logger
     extern Level MinimumFileLevel;
     
     std::string MakeColor(ConsoleColor color, bool background, bool bright);
+
+    template<typename ... Args>
+
+    void Log(Logger::Level level, std::string message, Args ... args)
+    {
+        Logger::Log(level, string_format(message.c_str(), args...));
+    }
+
     void Log(Level level, std::string message);
 };

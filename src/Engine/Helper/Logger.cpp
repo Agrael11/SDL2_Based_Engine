@@ -5,7 +5,7 @@
 #endif
 
 #include "Logger.h"
-#include "format.h"
+#include "StringHelp.h"
 
 using namespace Engine::Helper;
 
@@ -53,6 +53,7 @@ std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool 
 
     #endif
 }
+
 
 void Logger::Log(Logger::Level level, std::string message)
 {   
