@@ -99,7 +99,7 @@
             "configuration": "Debug"
         },
         {
-            "name": "Emscripten-debug",
+            "name": "Emscripten-release",
             "displayName": "Emscripten Javascript - Release",
             "configurePreset": "Emscripten",
             "configuration": "Release"

@@ -16,15 +16,15 @@ else ()
     message ("Use OpenGL ES")
     add_compile_definitions(USE_OPENGL_ES)
     set (RENDERER_SOURCE_FILES 
-    "./src/Engine/Rendering/OpenGL_ES/Texture.cpp" "./src/Engine/Rendering/OpenGL_ES/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL_ES/RenderTexture.cpp"  "./src/Engine/Rendering/OpenGL_ES/FontTexture.cpp"
-    "./src/Engine/Rendering/OpenGL_ES/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer.cpp" "./src/Engine/Rendering/OpenGL_ES/Shader.cpp" "./src/Engine/Rendering/OpenGL_ES/TtfFont.cpp" "./src/Engine/Rendering/OpenGL_ES/BitmapFont.cpp"
+    "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp"  "./src/Engine/Rendering/OpenGL/FontTexture.cpp"
+    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL_ES/Renderer_Init.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp" "./src/Engine/Rendering/OpenGL/BitmapFont.cpp"
     "./src/Engine/Rendering/OpenGL_ES/glad.c")
   else ()  
     message ("Use OpenGL")
     add_compile_definitions(USE_OPENGL)
     set (RENDERER_SOURCE_FILES
     "./src/Engine/Rendering/OpenGL/Texture.cpp" "./src/Engine/Rendering/OpenGL/ImageTexture.cpp" "./src/Engine/Rendering/OpenGL/RenderTexture.cpp" "./src/Engine/Rendering/OpenGL/FontTexture.cpp"
-    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp" "./src/Engine/Rendering/OpenGL/BitmapFont.cpp"
+    "./src/Engine/Rendering/OpenGL/Sprite.cpp" "./src/Engine/Rendering/OpenGL/Renderer_Init.cpp" "./src/Engine/Rendering/OpenGL/Renderer.cpp" "./src/Engine/Rendering/OpenGL/Shader.cpp" "./src/Engine/Rendering/OpenGL/TtfFont.cpp" "./src/Engine/Rendering/OpenGL/BitmapFont.cpp"
     "./src/Engine/Rendering/OpenGL/glad.c")
   endif()
 endif()
@@ -34,7 +34,8 @@ set (ENGINE_SOURCE_FILES "./src/Engine/Helper/Logger.cpp"
 ${RENDERER_SOURCE_FILES}
 "./src/Engine/Audio/Audio.cpp" "./src/Engine/Audio/Music.cpp" "./src/Engine/Audio/Sound.cpp"
 "./src/Engine/Math/Vector2f.cpp" "./src/Engine/Math/Vector2.cpp" "./src/Engine/Math/Vector3f.cpp" "./src/Engine/Math/Vector3.cpp" "./src/Engine/Math/Rectanglef.cpp" "./src/Engine/Math/Rectangle.cpp" "./src/Engine/Math/Color.cpp" "./src/Engine/Math/Colorf.cpp" "./src/Engine/Math/MathHelper.cpp"
-"./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp")
+"./src/Engine/BaseGame.cpp" "./src/Engine/Support.cpp" "./src/Engine/Helper/StringHelp.cpp"
+"./src/Engine/TextureManager.cpp")
 set (GAME_SOURCE_FILES "./src/Game.cpp")
 set (SOURCE_FILES ${ENGINE_SOURCE_FILES} ${GAME_SOURCE_FILES} "./src/Main.cpp")
 
@@ -63,10 +64,10 @@ endif (UNIX)
 if (WIN32)
   message("WINDOWS")
   find_package(SDL2 CONFIG REQUIRED)
-  find_package(SDL2-image CONFIG REQUIRED)
+  find_package(SDL2_image CONFIG REQUIRED)
   find_package(SDL2_mixer CONFIG REQUIRED)
   find_package(SDL2_ttf CONFIG REQUIRED)
-  find_package(sdl2-net CONFIG REQUIRED)
+  find_package(sdl2_net CONFIG REQUIRED)
   find_package(glm CONFIG REQUIRED)
 endif (WIN32)
 
@@ -84,5 +85,5 @@ if (WIN32)
 
   add_executable(${PROJECT_AND_EXECATUBLE_NAME} ${SOURCE_FILES})
 
-  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_image SDL2_mixer::SDL2_mixer SDL2::SDL2_net SDL2_ttf::SDL2_ttf glm::glm)
+  target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_net::SDL2_net SDL2_ttf::SDL2_ttf glm::glm)
 endif (WIN32)
