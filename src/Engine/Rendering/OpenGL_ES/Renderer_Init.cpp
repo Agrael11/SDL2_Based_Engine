@@ -1,5 +1,4 @@
 #include "../OpenGL/Renderer.h"
-#include "../../Helper/Format.h"
 #include "../../Helper/Logger.h"
 
 using namespace Engine::Helper;
