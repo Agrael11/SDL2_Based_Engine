@@ -35,11 +35,6 @@ private:
     Engine::Rendering::Shader mShader;
     
 public:
-    Engine::Rendering::RenderTexture mainRenderTexture;
-    Engine::Rendering::RenderTexture blackSquareTexture;
-    Engine::Rendering::RenderTexture blueSquareTexture;
-    Engine::Rendering::RenderTexture greenSquareTexture;
-    Engine::Rendering::ImageTexture backgroundImageTexture;
     Engine::Rendering::TtfFont font;
     Engine::Rendering::FontTexture textTexture;
     Engine::Rendering::Sprite text;
