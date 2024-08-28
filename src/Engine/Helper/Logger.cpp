@@ -55,7 +55,7 @@ std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool 
 }
 
 
-void Logger::Log(Logger::Level level, std::string message)
+void Logger::LogSimple(Logger::Level level, std::string message)
 {   
     if (level < MinimumPrintLevel) return;
 

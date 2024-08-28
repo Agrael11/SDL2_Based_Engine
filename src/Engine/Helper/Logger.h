@@ -19,12 +19,19 @@ namespace Engine::Helper::Logger
     
     std::string MakeColor(ConsoleColor color, bool background, bool bright);
 
-    template<typename ... Args>
+    void LogSimple(Level level, std::string message);
 
+    template<typename ... Args>
     void Log(Logger::Level level, std::string message, Args ... args)
     {
-        Logger::Log(level, string_format(message.c_str(), args...));
+        if (sizeof...(args) == 0)
+        {
+            Logger::LogSimple(level, message);
+        }
+        else
+        {
+            std::string formattedMessage = string_format(message.c_str(), args...);
+            Logger::LogSimple(level, formattedMessage);
+        }
     }
-
-    void Log(Level level, std::string message);
 };
