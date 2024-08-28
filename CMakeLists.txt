@@ -43,7 +43,7 @@ elseif (USE_OPENGL_ES)
 
     set(FILTERED_GL_FILES)
     foreach (GL_FILE ${GL_SOURCE})
-        get_filename_component(BASANAME ${GL_FILE} NAME)
+        get_filename_component(BASENAME ${GL_FILE} NAME)
         if (NOT BASENAME IN_LIST GL_ES_BASENAMES)
             list(APPEND FILTERED_GL_FILES ${GL_FILE})
         endif ()
