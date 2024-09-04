@@ -218,7 +218,7 @@ void Game::Draw(double delta)
 
     int wrap = 62;
     Color white(255,255,255,255);
-    this->textTexture.Generate(std::format("%d", this->score), this->font, white, renderer, wrap);
+    this->textTexture.Generate(std::format("{}", this->score), this->font, white, renderer, wrap);
     this->text.SetTexture(this->textTexture);
     
     pos.X = 1;
