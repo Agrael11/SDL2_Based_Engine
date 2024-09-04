@@ -15,7 +15,7 @@ using namespace Engine::Rendering;
 
 bool ImageTexture::Load(std::string filePath, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, "Loading texture %s...", filePath.c_str());
+    Logger::Log(Logger::Info, "Loading texture {}...", filePath.c_str());
     this->name = filePath;
 
     int sizeX = 0;

@@ -31,7 +31,7 @@ bool Shader::LoadFromStrings(std::string vertexString, std::string fragmentStrin
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 
-        Logger::Log(Logger::Error, "Failed to compile vertex shader: %s", infoLog);
+        Logger::Log(Logger::Error, "Failed to compile vertex shader: {}", infoLog);
         return false;
     }
 
@@ -48,7 +48,7 @@ bool Shader::LoadFromStrings(std::string vertexString, std::string fragmentStrin
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 
-        Logger::Log(Logger::Error, "Failed to compile fragment shader: %s", infoLog);
+        Logger::Log(Logger::Error, "Failed to compile fragment shader: {}", infoLog);
         return false;
     }
 
@@ -64,7 +64,7 @@ bool Shader::LoadFromStrings(std::string vertexString, std::string fragmentStrin
     if(!success) {
         glGetProgramInfoLog(this->mShaderProgram, 512, NULL, infoLog);
 
-        Logger::Log(Logger::Error, "Failed to link shader program: %s", infoLog);
+        Logger::Log(Logger::Error, "Failed to link shader program: {}", infoLog);
         return false;
     }
 
@@ -79,7 +79,7 @@ bool Shader::LoadFromFile(std::string vertexFilePath, std::string fragmentFilePa
     std::ifstream myInFile (vertexFilePath);
     if (myInFile.fail())
     {
-        Logger::Log(Logger::Error, "Failed to open vertex shader file %s.", vertexFilePath.c_str());
+        Logger::Log(Logger::Error, "Failed to open vertex shader file {}.", vertexFilePath.c_str());
     }
     std::string vertexData = std::string((std::istreambuf_iterator<char>(myInFile)), std::istreambuf_iterator<char>());
     myInFile.close();
@@ -87,7 +87,7 @@ bool Shader::LoadFromFile(std::string vertexFilePath, std::string fragmentFilePa
     myInFile.open(fragmentFilePath);
     if (myInFile.fail())
     {
-        Logger::Log(Logger::Error, "Failed to open fragment shader file %s.", fragmentFilePath.c_str());
+        Logger::Log(Logger::Error, "Failed to open fragment shader file {}.", fragmentFilePath.c_str());
         return false;
     }
     std::string fragmentData = std::string((std::istreambuf_iterator<char>(myInFile)), std::istreambuf_iterator<char>());

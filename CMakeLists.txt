@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 set(PROJECT_AND_EXECATUBLE_NAME SDL_Engine_Base)
 project(${PROJECT_AND_EXECATUBLE_NAME})
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 option(USE_SDL2 "Use SDL2 Renderer" OFF)
 option(USE_OPENGL "Use OpenGL Renderer" ON)

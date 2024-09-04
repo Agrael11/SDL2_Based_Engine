@@ -35,7 +35,7 @@ bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color c
 
     if (textSurface == NULL)
     {
-        Logger::Log(Logger::Error, "Unable to generate texture from font! SDL Error: %s", SDL_GetError());
+        Logger::Log(Logger::Error, "Unable to generate texture from font! SDL Error: {}", SDL_GetError());
         return false;
     }
 

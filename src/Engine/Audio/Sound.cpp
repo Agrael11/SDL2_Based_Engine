@@ -10,7 +10,7 @@ bool Sound::Load(std::string path)
     this->mChunk = Mix_LoadWAV(path.c_str());
     if (this->mChunk == NULL)
     {
-        Logger::Log(Logger::Error, "Failed to load sound chunk file %s! SDL_Mixer Error: %s", path.c_str(), Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to load sound chunk file {}! SDL_Mixer Error: {}", path.c_str(), Mix_GetError());
         return false;
     }
     return true;
@@ -21,7 +21,7 @@ bool Sound::Play(int loops)
     int channel = Mix_PlayChannel(-1, this->mChunk, loops);
     if (channel == -1)
     {
-        Logger::Log(Logger::Error, "Failed to play sound! SDL_Mixer Error: %s", Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to play sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     this->mChannel = channel;
@@ -33,7 +33,7 @@ bool Sound::Play(int loops, int volume)
     int channel = Mix_PlayChannel(-1, this->mChunk, loops);
     if (channel == -1)
     {
-        Logger::Log(Logger::Error, "Failed to play sound! SDL_Mixer Error: %s", Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to play sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     Mix_Volume(channel, volume);
@@ -54,7 +54,7 @@ bool Sound::Stop()
 {
     if (Mix_HaltChannel(this->mChannel) == 0)
     {
-        Logger::Log(Logger::Error, "Failed to stop sound! SDL_Mixer Error: %s", Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to stop sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     return true;

@@ -10,7 +10,7 @@ bool Music::Load(std::string path)
     this->mMusic = Mix_LoadMUS(path.c_str());
     if (this->mMusic == NULL)
     {
-        Logger::Log(Logger::Error, "Failed to load music file %s! SDL_Mixer Error: %s", path.c_str(), Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to load music file {}! SDL_Mixer Error: {}", path.c_str(), Mix_GetError());
         return false;
     }
     return true;
@@ -30,7 +30,7 @@ bool Music::Play(int loops)
     }
     if (Mix_PlayMusic(this->mMusic, loops) != 0)
     {
-        Logger::Log(Logger::Error, "Failed to play music! SDL_Mixer Error: %s", Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to play music! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     return true;
@@ -57,7 +57,7 @@ bool Music::Play(int loops, bool override, int fadeout)
     }
     if (Mix_PlayMusic(this->mMusic, loops) != 0)
     {
-        Logger::Log(Logger::Error, "Failed to play music! SDL_Mixer Error: %s", Mix_GetError());
+        Logger::Log(Logger::Error, "Failed to play music! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     return true;

@@ -33,11 +33,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerOpen(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, "Error opening controller %d! SDL_Error: %s.", id, SDL_GetError());
+                    Logger::Log(Logger::Error, "Error opening controller {}! SDL_Error: {}.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, "Opening controller %d (%s)", id, SDL_GameControllerName(controller));
+                    Logger::Log(Logger::Debug, "Opening controller {} ({})", id, SDL_GameControllerName(controller));
                 }
                 controllerChanged = true;
             }
@@ -47,11 +47,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerFromInstanceID(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, "Error closing controller %d! SDL_Error: %s.", id, SDL_GetError());
+                    Logger::Log(Logger::Error, "Error closing controller {}! SDL_Error: {}.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, "Closing controller %d (%s)", id, SDL_GameControllerName(controller));
+                    Logger::Log(Logger::Debug, "Closing controller {} ({})", id, SDL_GameControllerName(controller));
                     SDL_GameControllerClose(controller);
                 }
                 controllerChanged = true;
@@ -84,7 +84,7 @@ void Run()
         {
             SDL_GameControllerUpdate();
             changed++;
-            Logger::Log(Logger::Debug, "Rechecking events after controller state change (Repeat: %d)", changed);
+            Logger::Log(Logger::Debug, "Rechecking events after controller state change (Repeat: {})", changed);
             controllerChanged = false;
             CheckEvents();
         }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <format>
 #include "StringHelp.h"
 
 namespace Engine::Helper::Logger
@@ -22,7 +23,7 @@ namespace Engine::Helper::Logger
     void LogSimple(Level level, std::string message);
 
     template<typename ... Args>
-    void Log(Logger::Level level, std::string message, Args ... args)
+    void Log(Logger::Level level, std::string message, Args&& ... args)
     {
         if (sizeof...(args) == 0)
         {
@@ -30,7 +31,7 @@ namespace Engine::Helper::Logger
         }
         else
         {
-            std::string formattedMessage = string_format(message.c_str(), args...);
+            std::string formattedMessage = std::vformat(message, std::make_format_args(args...));
             Logger::LogSimple(level, formattedMessage);
         }
     }

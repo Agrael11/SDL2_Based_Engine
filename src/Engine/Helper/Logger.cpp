@@ -4,6 +4,8 @@
 #include <emscripten.h>
 #endif
 
+#include <format>
+
 #include "Logger.h"
 #include "StringHelp.h"
 
@@ -19,7 +21,7 @@ std::string Logger::FileName = "";
 std::string Logger::TimedCopyName = "";
 
 
-const std::string return_current_time_and_date(std::string format)
+static const std::string return_current_time_and_date(std::string format)
 {
     time_t now = time(0);
     struct tm tstruct;
@@ -49,7 +51,7 @@ std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool 
 
     if (col == -1) col = 0;
 
-    return string_format("\x1b[%dm", col);
+    return std::format("\x1b[{}m", col);
 
     #endif
 }
@@ -67,24 +69,24 @@ void Logger::LogSimple(Logger::Level level, std::string message)
     {
         case Debug:
         printf("[%sDebug%s @ %s%s%s] %s\n", MakeColor(White, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = string_format("[Debug @ %s] %s\n", realTime.c_str(),  message.c_str());
+        printText = std::format("[Debug @ {}] {}\n", realTime.c_str(),  message.c_str());
         break;
         case Info:
         printf("[%sInfo%s @ %s%s%s] %s\n", MakeColor(Blue, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = string_format("[Info @ %s] %s\n", realTime.c_str(),  message.c_str());
+        printText = std::format("[Info @ {}] {}\n", realTime.c_str(),  message.c_str());
         break;
         case Warning:
         printf("[%sWarning%s @ %s%s%s] %s\n", MakeColor(Yellow, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = string_format("[Warning @ %s] %s\n", realTime.c_str(),  message.c_str());
+        printText = std::format("[Warning @ {}] {}\n", realTime.c_str(),  message.c_str());
         break;
         case Error:
         printf("[%sError%s @ %s%s%s] %s\n", MakeColor(Red, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = string_format("[Error @ %s] %s\n", realTime.c_str(),  message.c_str());
+        printText = std::format("[Error @ {}] {}\n", realTime.c_str(),  message.c_str());
         break;
         default:
         case Fatal:
         printf("[%sFatal%s @ %s%s%s] %s\n", MakeColor(Red, false, false).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = string_format("[Fatal @ %s] %s\n", realTime.c_str(),  message.c_str());
+        printText = std::format("[Fatal @ {}] {}\n", realTime.c_str(),  message.c_str());
         break;
     }
     
@@ -109,7 +111,7 @@ void Logger::LogSimple(Logger::Level level, std::string message)
         {
             if (TimedCopyName == "")
             {
-                TimedCopyName = string_format("%s_%s_%s",return_current_time_and_date("%Y-%m-%d"), return_current_time_and_date("%H-%M-%S"),FileName);
+                TimedCopyName = std::format("%s_%s_%s",return_current_time_and_date("%Y-%m-%d"), return_current_time_and_date("%H-%M-%S"),FileName);
             }
             std::ofstream mySecondOutFile (TimedCopyName);
             mySecondOutFile << append;
