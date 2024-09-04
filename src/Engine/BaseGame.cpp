@@ -206,7 +206,7 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
 
     if (this->mWindow == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Window could not be created! SDL_Error:: {}", SDL_GetError()));
+        Logger::Log(Logger::Error, "Window could not be created! SDL_Error:: {}", SDL_GetError());
         return false;
     }
     
