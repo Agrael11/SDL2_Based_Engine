@@ -20,9 +20,9 @@ bool Renderer::Init(SDL_Window &window, Uint32 flags    )
 
     gladLoadGLLoader(SDL_GL_GetProcAddress);
     Logger::Log(Logger::Info, "OpenGL Loaded.");
-    //Logger::Log(Logger::Info, "Vendor:     {}", glGetString(GL_VENDOR));
-    //Logger::Log(Logger::Info, "Renderer:   {}", glGetString(GL_RENDERER));
-    //Logger::Log(Logger::Info, "Version:    {}", glGetString(GL_VERSION));
+    Logger::Log(Logger::Info, "Vendor:     {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+    Logger::Log(Logger::Info, "Renderer:   {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    Logger::Log(Logger::Info, "Version:    {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

@@ -14,15 +14,15 @@ bool Renderer::Init(SDL_Window &window, Uint32 flags    )
     this->mContext = SDL_GL_CreateContext(&window);
     if (this->mContext == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Failed to create context. SDL_Error: {}", SDL_GetError()));
+        Logger::Log(Logger::Error, "Failed to create context. SDL_Error: {}", SDL_GetError());
         return false;
     }
 
     gladLoadGLES2Loader(SDL_GL_GetProcAddress);
     Logger::Log(Logger::Info, "OpenGL Loaded.");
-    Logger::Log(Logger::Info, string_format("Vendor:     {}", glGetString(GL_VENDOR)));
-    Logger::Log(Logger::Info, string_format("Renderer:   {}", glGetString(GL_RENDERER)));
-    Logger::Log(Logger::Info, string_format("Version:    {}", glGetString(GL_VERSION)));
+    Logger::Log(Logger::Info, "Vendor:     {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+    Logger::Log(Logger::Info, "Renderer:   {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    Logger::Log(Logger::Info, "Version:    {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
