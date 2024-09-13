@@ -1,13 +1,10 @@
 #pragma once
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <memory>
 #include <vector>
-#include <format>
+#include <string>
 
 namespace Engine::Helper
 {
-    std::vector<std::string> splitString(std::string input, char splitChar);
+    //Splits string by "splitChar" - returns vector of strings.
+    std::vector<std::string> splitString(const std::string_view input, const char splitChar);
 };
