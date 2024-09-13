@@ -25,7 +25,7 @@ void CheckEvents()
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
-        if (Engine::Support::controller)
+        if (Engine::Support::Config::isControllerEnabled())
         {
             if (e.type == SDL_CONTROLLERDEVICEADDED)
             {
@@ -78,7 +78,7 @@ void Run()
 
     CheckEvents();
     int changed = 0;
-    if (Engine::Support::controller)
+    if (Engine::Support::Config::isControllerEnabled())
     {
         while (controllerChanged)
         {

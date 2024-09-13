@@ -110,13 +110,13 @@ bool BaseGame::Load_OpenGL(int width, int height, std::string windowTitle)
     if (SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
         Logger::Log(Logger::Error, "SDL Audio could not initialize! SDL_Error: {}", SDL_GetError());
-        Support::audio = false;
+        Support::Config::setAudioEnabled(false);
     }
 
     if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER))
     {
         Logger::Log(Logger::Error, "SDL GameController could not initialize! SDL_Error: {}", SDL_GetError());
-        Support::controller = false;
+        Support::Config::setControllerEnabled(false);
     }
 
 
@@ -173,13 +173,13 @@ bool BaseGame::Load_OpenGL_ES(int width, int height, std::string windowTitle)
     if (SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
         Logger::Log(Logger::Error, "SDL Audio could not initialize! SDL_Error: {}", SDL_GetError());
-        Support::audio = false;
+        Support::Config::setAudioEnabled(false);
     }
 
     if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER))
     {
         Logger::Log(Logger::Error, "SDL GameController could not initialize! SDL_Error: {}", SDL_GetError());
-        Support::controller = false;
+        Support::Config::setControllerEnabled(false);
     }
 
 

@@ -105,7 +105,7 @@ Game::Game(int width, int height, std::string windowTitle)
 
 void Game::Init()
 {
-    if (Engine::Support::audio)
+    if (Engine::Support::Config::isAudioEnabled())
     {
         InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     }
@@ -295,21 +295,21 @@ void Game::HandleEvent(SDL_Event e)
     }
     else if (e.type == SDL_CONTROLLERAXISMOTION)
     {
-        if (Engine::Support::controller)
+        if (Engine::Support::Config::isControllerEnabled())
         {
             this->ControllerAxisMove(e.caxis);
         }
     }
     else if (e.type == SDL_CONTROLLERBUTTONDOWN)
     {
-        if (Engine::Support::controller)
+        if (Engine::Support::Config::isControllerEnabled())
         {
             this->ControllerButtonDown(e.cbutton);
         }
     }
     else if (e.type == SDL_CONTROLLERBUTTONUP)
     {
-        if (Engine::Support::controller)
+        if (Engine::Support::Config::isControllerEnabled())
         {
             this->ControllerButtonUp(e.cbutton);
         }
