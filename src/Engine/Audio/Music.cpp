@@ -5,30 +5,53 @@
 using namespace Engine::Helper;
 using namespace Engine::Audio;
 
-bool Music::Load(std::string path)
+Music::~Music()
 {
-    this->mMusic = Mix_LoadMUS(path.c_str());
-    if (this->mMusic == NULL)
+    unload();
+}
+
+Music::Music(Music&& other) noexcept
+    : m_music(std::move(other.m_music))
+{
+}
+
+// Move assignment operator
+Music& Music::operator=(Music&& other) noexcept
+{
+    if (this != &other)
     {
-        Logger::log(Logger::Level::Error, "Failed to load music file {}! SDL_Mixer Error: {}", path.c_str(), Mix_GetError());
+        m_music = std::move(other.m_music);
+    }
+    return *this;
+}
+
+bool Music::load(std::string_view path)
+{
+    this->unload();
+
+    Mix_Music* mixMusic = Mix_LoadMUS(path.data());
+    if (mixMusic == nullptr)
+    {
+        Logger::log(Logger::Level::Error, "Failed to load music file {}! SDL_Mixer Error: {}", path.data(), Mix_GetError());
         return false;
     }
+    this->m_music.reset(mixMusic);
     return true;
 }
 
-void Music::SetVolume(int volume)
+void Music::setVolume(int volume)
 {
     Mix_VolumeMusic(volume);
 }
 
-bool Music::Play(int loops)
+bool Music::play(int loops)
 {
     if (Mix_PlayingMusic())
     {
         Logger::log(Logger::Level::Error, "Music is already playing.");
         return false;
     }
-    if (Mix_PlayMusic(this->mMusic, loops) != 0)
+    if (Mix_PlayMusic(this->m_music.get(), loops) != 0)
     {
         Logger::log(Logger::Level::Error, "Failed to play music! SDL_Mixer Error: {}", Mix_GetError());
         return false;
@@ -36,7 +59,7 @@ bool Music::Play(int loops)
     return true;
 }
 
-bool Music::Play(int loops, bool override, int fadeout)
+bool Music::play(int loops, bool override, int fadeout)
 {
     if (Mix_PlayingMusic())
     {
@@ -55,7 +78,7 @@ bool Music::Play(int loops, bool override, int fadeout)
             Mix_HaltMusic();
         }
     }
-    if (Mix_PlayMusic(this->mMusic, loops) != 0)
+    if (Mix_PlayMusic(this->m_music.get(), loops) != 0)
     {
         Logger::log(Logger::Level::Error, "Failed to play music! SDL_Mixer Error: {}", Mix_GetError());
         return false;
@@ -63,7 +86,7 @@ bool Music::Play(int loops, bool override, int fadeout)
     return true;
 }
 
-bool Music::Pause()
+bool Music::pause()
 {
     if (Mix_PlayingMusic() == 0)
     {
@@ -79,7 +102,7 @@ bool Music::Pause()
     return true;
 }
 
-bool Music::Rewind()
+bool Music::rewind()
 {
     if (Mix_PlayingMusic() == 0)
     {
@@ -90,21 +113,13 @@ bool Music::Rewind()
     return true;
 }
 
-bool Music::IsPlaying()
+bool Music::isPlaying()
 {
-    if (Mix_PlayingMusic() == 0)
-    {
-        return false;
-    }
-    if (Mix_PausedMusic() == 1)
-    {
-        return false;
-    }
-    return true;
+    return (Mix_PlayingMusic() == 1 || Mix_PausedMusic() == 0);
 
 }
 
-bool Music::Resume()
+bool Music::resume()
 {
     if (Mix_PlayingMusic() == 0)
     {
@@ -120,7 +135,7 @@ bool Music::Resume()
     return true;
 }
 
-bool Music::Stop(int fadeout)
+bool Music::stop(int fadeout)
 {
     if (Mix_PlayingMusic() == 0)
     {
@@ -136,11 +151,10 @@ bool Music::Stop(int fadeout)
     return true;
 }
 
-void Music::Unload()
+void Music::unload()
 {
-    if (this->mMusic == NULL)
+    if (this->m_music)
     {
-        return;   
+        this->m_music.reset();
     }
-    Mix_FreeMusic(this->mMusic);
 }
