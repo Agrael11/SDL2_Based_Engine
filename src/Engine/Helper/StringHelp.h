@@ -5,6 +5,9 @@
 
 namespace Engine::Helper
 {
-    //Splits string by "splitChar" - returns vector of strings.
-    std::vector<std::string> splitString(const std::string_view input, const char splitChar);
+    class StringHelper
+    {
+        //Splits string by "splitChar" - returns vector of strings.
+        static std::vector<std::string> splitString(const std::string_view input, const char splitChar);
+    };
 };

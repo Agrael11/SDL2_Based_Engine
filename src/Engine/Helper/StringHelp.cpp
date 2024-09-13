@@ -4,31 +4,35 @@
 #include <string>
 #include <iostream>
 
-std::vector<std::string> Engine::Helper::splitString(const std::string_view input, const char splitChar)
+namespace Engine::Helper
 {
-    std::vector<std::string> tokens;
-    std::string token;
 
-    for (char c : input)
+    std::vector<std::string> StringHelper::splitString(const std::string_view input, const char splitChar)
     {
-        if (c == splitChar)
+        std::vector<std::string> tokens;
+        std::string token;
+
+        for (char c : input)
         {
-            if (!token.empty())
+            if (c == splitChar)
             {
-                tokens.push_back(std::move(token));
-                token.clear();
+                if (!token.empty())
+                {
+                    tokens.push_back(std::move(token));
+                    token.clear();
+                }
+            }
+            else
+            {
+                token += c;
             }
         }
-        else
+
+        if (!token.empty())
         {
-            token += c;
+            tokens.push_back(std::move(token));
         }
-    }
 
-    if (!token.empty())
-    {
-        tokens.push_back(std::move(token));
+        return tokens;
     }
-
-    return tokens;
 }
