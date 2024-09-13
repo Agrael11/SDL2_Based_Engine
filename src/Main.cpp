@@ -33,11 +33,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerOpen(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, "Error opening controller {}! SDL_Error: {}.", id, SDL_GetError());
+                    Logger::log(Logger::Level::Error, "Error opening controller {}! SDL_Error: {}.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, "Opening controller {} ({})", id, SDL_GameControllerName(controller));
+                    Logger::log(Logger::Level::Debug, "Opening controller {} ({})", id, SDL_GameControllerName(controller));
                 }
                 controllerChanged = true;
             }
@@ -47,11 +47,11 @@ void CheckEvents()
                 SDL_GameController* controller = SDL_GameControllerFromInstanceID(id);
                 if (controller == NULL)
                 {
-                    Logger::Log(Logger::Error, "Error closing controller {}! SDL_Error: {}.", id, SDL_GetError());
+                    Logger::log(Logger::Level::Error, "Error closing controller {}! SDL_Error: {}.", id, SDL_GetError());
                 }
                 else
                 {
-                    Logger::Log(Logger::Debug, "Closing controller {} ({})", id, SDL_GameControllerName(controller));
+                    Logger::log(Logger::Level::Debug, "Closing controller {} ({})", id, SDL_GameControllerName(controller));
                     SDL_GameControllerClose(controller);
                 }
                 controllerChanged = true;
@@ -84,7 +84,7 @@ void Run()
         {
             SDL_GameControllerUpdate();
             changed++;
-            Logger::Log(Logger::Debug, "Rechecking events after controller state change (Repeat: {})", changed);
+            Logger::log(Logger::Level::Debug, "Rechecking events after controller state change (Repeat: {})", changed);
             controllerChanged = false;
             CheckEvents();
         }
@@ -100,12 +100,7 @@ void Run()
 
 int main(int argc, char *args[])
 {
-    Logger::MinimumPrintLevel = Logger::Debug;
-    Logger::MinimumFileLevel = Logger::Debug;
-    Logger::FileName = "Log.log";
-    Logger::PrintToFile = false;
-    Logger::SaveTimedCopy = false;
-    Logger::OverrideFile = true;
+    Logger::setup(Logger::Level::Debug, Logger::Level::Debug, true, "Log.log", false, false);
 
     Game tempGame = Game(640, 480, "Test Window");
 

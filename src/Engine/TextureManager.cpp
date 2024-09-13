@@ -20,7 +20,7 @@ bool TextureManager::AddTexture(std::string id, std::string filename, Engine::Re
 {
 	if (TextureManager::TextureExists(id))
 	{
-		Logger::Log(Logger::Error, "Texture {} (IT) already loaded", id);
+		Logger::log(Logger::Level::Error, "Texture {} (IT) already loaded", id);
 		return false;
 	}
 
@@ -31,7 +31,7 @@ bool TextureManager::AddTexture(std::string id, std::string filename, Engine::Re
 	}
 
 	mImageTextures[id] = texture;
-	Logger::Log(Logger::Info, "Added new {} (IT) to Texture Manager", id);
+	Logger::log(Logger::Level::Info, "Added new {} (IT) to Texture Manager", id);
 	
 	return true;
 }
@@ -40,7 +40,7 @@ bool TextureManager::AddTexture(std::string id, int width, int height, Engine::R
 {
 	if (TextureManager::TextureExists(id))
 	{
-		Logger::Log(Logger::Error, "Texture {} (RT) already loaded", id);
+		Logger::log(Logger::Level::Error, "Texture {} (RT) already loaded", id);
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool TextureManager::AddTexture(std::string id, int width, int height, Engine::R
 	}
 
 	mRenderTextures[id] = texture;
-	Logger::Log(Logger::Info, "Added new {} (RT) to Texture Manager", id);
+	Logger::log(Logger::Level::Info, "Added new {} (RT) to Texture Manager", id);
 
 	return true;
 }
@@ -60,12 +60,12 @@ bool TextureManager::AddTexture(std::string id, ImageTexture texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
-		Logger::Log(Logger::Error, "Texture {} (IT) already loaded", id);
+		Logger::log(Logger::Level::Error, "Texture {} (IT) already loaded", id);
 		return false;
 	}
 
 	mImageTextures[id] = texture;
-	Logger::Log(Logger::Info, "Added {} (IT) to Texture Manager", id);
+	Logger::log(Logger::Level::Info, "Added {} (IT) to Texture Manager", id);
 
 	return true;
 }
@@ -74,12 +74,12 @@ bool TextureManager::AddTexture(std::string id, RenderTexture texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
-		Logger::Log(Logger::Error, "Texture {} (RT) already loaded", id);
+		Logger::log(Logger::Level::Error, "Texture {} (RT) already loaded", id);
 		return false;
 	}
 
 	mRenderTextures[id] = texture;
-	Logger::Log(Logger::Info, "Added {} (RT) to Texture Manager", id);
+	Logger::log(Logger::Level::Info, "Added {} (RT) to Texture Manager", id);
 
 	return true;
 }
@@ -88,12 +88,12 @@ bool TextureManager::AddTexture(std::string id, Texture texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
-		Logger::Log(Logger::Error, "Texture {} already loaded", id);
+		Logger::log(Logger::Level::Error, "Texture {} already loaded", id);
 		return false;
 	}
 
 	mBasicTextures[id] = texture;
-	Logger::Log(Logger::Info, "Added {} to Texture Manager", id);
+	Logger::log(Logger::Level::Info, "Added {} to Texture Manager", id);
 
 	return true;
 }
@@ -184,7 +184,7 @@ bool TextureManager::RemoveTexture(std::string id)
 {
 	if (!(TextureManager::TextureExists(id)))
 	{
-		Logger::Log(Logger::Warning, "Texture {} does not exist", id);
+		Logger::log(Logger::Level::Warning, "Texture {} does not exist", id);
 		return false;
 	}
 	switch (TextureManager::GetTextureType(id))

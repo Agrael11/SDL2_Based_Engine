@@ -16,12 +16,12 @@ using namespace Engine::Rendering;
 
 bool ImageTexture::Load(std::string filePath, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, string_format("Loading texture %s...", filePath.c_str()));
+    Logger::log(Logger::Level::Info, string_format("Loading texture %s...", filePath.c_str()));
     this->mTexture = IMG_LoadTexture(renderer.GetSDL_Renderer(), filePath.c_str());
 
     if (this->mTexture == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Unable to load texture from file %s! SDL Error: %s", filePath.c_str(), SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to load texture from file %s! SDL Error: %s", filePath.c_str(), SDL_GetError()));
         return false;
     }
 

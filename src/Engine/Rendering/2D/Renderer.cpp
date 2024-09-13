@@ -74,7 +74,7 @@ bool Renderer::CleanRenderTarget()
 {
     if (SDL_SetRenderTarget(this->mRenderer, NULL) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to clean render texture! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to clean render texture! SDL Error: %s", SDL_GetError()));
         return false;
     }
     return true;

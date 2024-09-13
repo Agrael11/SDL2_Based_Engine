@@ -15,7 +15,7 @@ using namespace Engine::Rendering;
 
 bool ImageTexture::Load(std::string filePath, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, "Loading texture {}...", filePath.c_str());
+    Logger::log(Logger::Level::Info, "Loading texture {}...", filePath.c_str());
     this->name = filePath;
 
     int sizeX = 0;
@@ -45,7 +45,7 @@ bool ImageTexture::Load(std::string filePath, Renderer &renderer)
     }
     else
     {
-        Logger::Log(Logger::Error, "Failed to load texture.");
+        Logger::log(Logger::Level::Error, "Failed to load texture.");
     }
 
     this->mSize = Vector2(sizeX, sizeY);

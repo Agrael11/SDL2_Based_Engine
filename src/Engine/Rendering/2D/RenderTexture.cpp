@@ -15,7 +15,7 @@ bool RenderTexture::Create(int width, int height, Renderer &renderer)
 
     if (this->mTexture == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Unable to create render texture! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to create render texture! SDL Error: %s", SDL_GetError()));
         return false;
     }
     
@@ -28,7 +28,7 @@ bool RenderTexture::SetAsRenderTarget(Renderer &renderer)
 {
     if (SDL_SetRenderTarget(renderer.GetSDL_Renderer(), this->mTexture) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to set render texture! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to set render texture! SDL Error: %s", SDL_GetError()));
         return false;
     }
     return true;

@@ -10,19 +10,19 @@ bool Renderer::Init(SDL_Window &window, Uint32 flags    )
 {
     this->mWindowReference = &window;
 
-    Logger::Log(Logger::Info, "Creating context."); 
+    Logger::log(Logger::Level::Info, "Creating context."); 
     this->mContext = SDL_GL_CreateContext(&window);
     if (this->mContext == NULL)
     {
-        Logger::Log(Logger::Error, "Failed to create context. SDL_Error: {}", SDL_GetError());
+        Logger::log(Logger::Level::Error, "Failed to create context. SDL_Error: {}", SDL_GetError());
         return false;
     }
 
     gladLoadGLES2Loader(SDL_GL_GetProcAddress);
-    Logger::Log(Logger::Info, "OpenGL Loaded.");
-    Logger::Log(Logger::Info, "Vendor:     {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-    Logger::Log(Logger::Info, "Renderer:   {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-    Logger::Log(Logger::Info, "Version:    {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    Logger::log(Logger::Level::Info, "OpenGL Loaded.");
+    Logger::log(Logger::Level::Info, "Vendor:     {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+    Logger::log(Logger::Level::Info, "Renderer:   {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    Logger::log(Logger::Level::Info, "Version:    {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

@@ -35,7 +35,7 @@ bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color c
 
     if (textSurface == NULL)
     {
-        Logger::Log(Logger::Error, "Unable to generate texture from font! SDL Error: {}", SDL_GetError());
+        Logger::log(Logger::Level::Error, "Unable to generate texture from font! SDL Error: {}", SDL_GetError());
         return false;
     }
 
@@ -64,9 +64,9 @@ bool FontTexture::Generate(std::string text, TtfFont font, Engine::Math::Color c
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    SDL_FreeSurface(textSurface);
-
     this->mSize = Vector2(textSurface->w, textSurface->h);
+
+    SDL_FreeSurface(textSurface);
     this->mCreated = true;
 
     delete[] data;

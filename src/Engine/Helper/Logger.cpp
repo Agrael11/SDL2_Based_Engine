@@ -9,117 +9,159 @@
 #include "Logger.h"
 #include "StringHelp.h"
 
-using namespace Engine::Helper;
-
-Logger::Level Logger::MinimumPrintLevel = Logger::Info;
-Logger::Level Logger::MinimumFileLevel = Logger::Warning;
-bool Logger::PrintToFile = false;
-bool Logger::OverrideFile = true;
-bool Logger::OpenedFile = false;
-bool Logger::SaveTimedCopy = true;
-std::string Logger::FileName = "";
-std::string Logger::TimedCopyName = "";
-
-
-static const std::string return_current_time_and_date(std::string format)
+namespace Engine::Helper
 {
-    time_t now = time(0);
-    struct tm tstruct;
-    char buf[80];
-    #if WIN32
-        localtime_s(&tstruct, &now);
-    #else
-        localtime_r(&now, &tstruct);
-    #endif
-    strftime(buf, sizeof(buf), format.c_str(), &tstruct);
-    return buf;
-}
+    Logger::Level Logger::m_minimumPrintLevel = Logger::Level::Info;
+    Logger::Level Logger::m_minimumFileLevel = Logger::Level::Warning;
+    bool Logger::m_printToFile = false;
+    bool Logger::m_overrideFile = true;
+    bool Logger::m_saveTimedCopy = true;
+    bool Logger::m_openedFile = false;
+    std::string Logger::m_fileName = "";
+    std::string Logger::m_timedCopyName = "";
 
-std::string Logger::MakeColor(Logger::ConsoleColor color, bool background, bool bright)
-{
-    #if EMSCRIPTEN
-
-    return "";
-
-    #else
-
-    int col = color;
-
-    if (background) col += 40;
-    else col += 30;
-    if (bright) col += 60;
-
-    if (col == -1) col = 0;
-
-    return std::format("\x1b[{}m", col);
-
-    #endif
-}
-
-
-void Logger::LogSimple(Logger::Level level, std::string message)
-{   
-    if (level < MinimumPrintLevel) return;
-
-    std::string realTime = return_current_time_and_date("%Y-%m-%d %X");
-
-    std::string printText;
-
-    switch (level)
+    void Logger::setup(Level minimumPrintLevel, Level minimumFileLevel, bool printToFile, std::string fileName, bool saveTimedCopy, bool overrideFile)
     {
-        case Debug:
-        printf("[%sDebug%s @ %s%s%s] %s\n", MakeColor(White, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = std::format("[Debug @ {}] {}\n", realTime.c_str(),  message.c_str());
-        break;
-        case Info:
-        printf("[%sInfo%s @ %s%s%s] %s\n", MakeColor(Blue, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = std::format("[Info @ {}] {}\n", realTime.c_str(),  message.c_str());
-        break;
-        case Warning:
-        printf("[%sWarning%s @ %s%s%s] %s\n", MakeColor(Yellow, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = std::format("[Warning @ {}] {}\n", realTime.c_str(),  message.c_str());
-        break;
-        case Error:
-        printf("[%sError%s @ %s%s%s] %s\n", MakeColor(Red, false, true).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = std::format("[Error @ {}] {}\n", realTime.c_str(),  message.c_str());
-        break;
-        default:
-        case Fatal:
-        printf("[%sFatal%s @ %s%s%s] %s\n", MakeColor(Red, false, false).c_str(), MakeColor(White, false, false).c_str(), MakeColor(Blue, false, true).c_str(), realTime.c_str(), MakeColor(White, false, false).c_str(), message.c_str());
-        printText = std::format("[Fatal @ {}] {}\n", realTime.c_str(),  message.c_str());
-        break;
+        m_minimumPrintLevel = minimumPrintLevel;
+        m_minimumFileLevel = minimumFileLevel;
+        m_printToFile = printToFile;
+        m_fileName = fileName;
+        m_saveTimedCopy = saveTimedCopy;
+        m_overrideFile = overrideFile;
     }
-    
-    #ifndef EMSCRIPTEN
-    if (PrintToFile)
+
+    std::string Logger::returnCurrentTimeDate(const std::string_view format)
     {
-        std::string append = "";
+        time_t now = time(0);
+        struct tm tstruct;
+        char buf[80];
+#if WIN32
+        localtime_s(&tstruct, &now);
+#else
+        localtime_r(&now, &tstruct);
+#endif
+        strftime(buf, sizeof(buf), format.data(), &tstruct);
+        return buf;
+    }
+
+    std::string Logger::makeColor(Logger::ConsoleColor color, bool background, bool bright)
+    {
+#if EMSCRIPTEN
+
+        return "";
+
+#else
+
+        int col = static_cast<int>(color);
+
+        if (background) col += 40;
+        else col += 30;
+        if (bright) col += 60;
+
+        if (col == -1) col = 0;
+
+        return std::format("\x1b[{}m", col);
+
+#endif
+    }
+
+
+    void Logger::logSimple(const Logger::Level level, const std::string_view message)
+    {
+        std::string realTime = returnCurrentTimeDate("%Y-%m-%d %X");
         
-        if (OpenedFile || !OverrideFile)
+        if (level >= m_minimumPrintLevel) logConsole(level, message, realTime);
+
+#ifndef EMSCRIPTEN
+        if (m_printToFile && !m_fileName.empty()  && level >= m_minimumFileLevel) logFile(level, message, realTime);
+#endif
+    }
+
+    void Logger::logConsole(const Logger::Level level, const std::string_view message, const std::string_view realTime)
+    {
+        std::string gray = makeColor(ConsoleColor::White, false, false);
+        std::string blue = makeColor(ConsoleColor::Blue, false, true);
+
+        std::string levelColor;
+        std::string levelString;
+        switch (level)
         {
-            std::ifstream myInFile (FileName);
-            append = std::string((std::istreambuf_iterator<char>(myInFile)), std::istreambuf_iterator<char>());
-            myInFile.close();
+        case Level::Debug:
+            levelColor = makeColor(ConsoleColor::White, false, true);
+            levelString = "Debug";
+            break;
+        case Level::Info:
+            levelColor = makeColor(ConsoleColor::Blue, false, true);
+            levelString = "Info";
+            break;
+        case Level::Warning:
+            levelColor = makeColor(ConsoleColor::Yellow, false, true);
+            levelString = "Warning";
+            break;
+        case Level::Error:
+            levelColor = makeColor(ConsoleColor::Red, false, true);
+            levelString = "Error";
+            break;
+        default:
+        case Level::Fatal:
+            levelColor = makeColor(ConsoleColor::Red, false, false);
+            levelString = "Fatal Error";
+            break;
         }
 
-        std::ofstream myOutFile (FileName);
-        myOutFile << append;
+        printf("[%s%s%s @ %s%s%s] %s\n", levelColor.c_str(), levelString.c_str(), gray.c_str(), blue.c_str(), realTime.data(), gray.c_str(), message.data());
+    }
+
+    void Logger::logFile(const Logger::Level level, const std::string_view message, const std::string_view realTime)
+    {
+        std::string levelString;
+        switch (level)
+        {
+        case Level::Debug:
+            levelString = "Debug";
+            break;
+        case Level::Info:
+            levelString = "Info";
+            break;
+        case Level::Warning:
+            levelString = "Warning";
+            break;
+        case Level::Error:
+            levelString = "Error";
+            break;
+        default:
+        case Level::Fatal:
+            levelString = "Fatal Error";
+            break;
+        }
+        
+        std::string printText = std::format("[{} @ {}] {}\n", levelString, realTime, message);
+
+        std::ofstream myOutFile(m_fileName, (m_overrideFile && !m_openedFile) ? std::ios_base::trunc : std::ios_base::app);
+        if (!myOutFile)
+        {
+            Logger::logConsole(Logger::Level::Error, std::format("Failed to open Log file: {}", m_fileName), realTime);
+            return;
+        }
+
         myOutFile << printText;
         myOutFile.close();
 
-        if (SaveTimedCopy)
+        if (m_saveTimedCopy)
         {
-            if (TimedCopyName == "")
+            if (m_timedCopyName == "")
             {
-                TimedCopyName = std::format("%s_%s_%s",return_current_time_and_date("%Y-%m-%d"), return_current_time_and_date("%H-%M-%S"),FileName);
+                m_timedCopyName = std::format("{}_{}_{}", returnCurrentTimeDate("%Y-%m-%d"), returnCurrentTimeDate("%H-%M-%S"), m_fileName);
             }
-            std::ofstream mySecondOutFile (TimedCopyName);
-            mySecondOutFile << append;
+            std::ofstream mySecondOutFile(m_timedCopyName, std::ios_base::app);
+            if (!mySecondOutFile)
+            {
+                Logger::logConsole(Logger::Level::Error, std::format("Failed to open Log file: {}", m_timedCopyName), realTime);
+                return;
+            }
             mySecondOutFile << printText;
             mySecondOutFile.close();
         }
-
-        OpenedFile = true;
+        m_openedFile = true;
     }
-    #endif
 }

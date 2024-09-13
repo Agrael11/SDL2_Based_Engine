@@ -103,7 +103,7 @@ bool Sprite::Draw(Rectangle &destinationRectangle, Renderer &renderer, double ro
 
     if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture.GetHandle(), &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
         return false;
     }
     return true;
@@ -124,7 +124,7 @@ bool Sprite::Draw(Rectangle &sourceRectangle, Rectangle &destinationRectangle, R
 
     if (SDL_RenderCopyEx(renderer.GetSDL_Renderer(), this->mTexture.GetHandle(), &srcRect, &dstRect, rotationRad, &actualOrigin, (SDL_RendererFlip)flip) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to draw texture! SDL Error: %s", SDL_GetError()));
         return false;
     }
     return true;
@@ -151,7 +151,7 @@ bool Sprite::SetBlendMode(BlendMode::BlendMode mode)
     }
     if (SDL_SetTextureBlendMode(this->mTexture.GetHandle(), bMode) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to set texture blend mode! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to set texture blend mode! SDL Error: %s", SDL_GetError()));
         return false;
     }
     return true;
@@ -162,12 +162,12 @@ bool Sprite::SetColorMod(Colorf &color)
     Color tempC = color.GetColor();
     if (SDL_SetTextureColorMod(this->mTexture.GetHandle(), tempC.R, tempC.G, tempC.B) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to set texture color mod! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to set texture color mod! SDL Error: %s", SDL_GetError()));
         return false;
     }
         if (SDL_SetTextureAlphaMod(this->mTexture.GetHandle(), tempC.A) != 0)
     {
-        Logger::Log(Logger::Error, string_format("Unable to set texture alpha mod! SDL Error: %s", SDL_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Unable to set texture alpha mod! SDL Error: %s", SDL_GetError()));
         return false;
     }
 

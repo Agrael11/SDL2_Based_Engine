@@ -13,19 +13,19 @@ unsigned int Shader::GetHandle()
 
 bool Shader::LoadFromStrings(std::string vertexString, std::string fragmentString)
 {
-    Logger::Log(Logger::Warning, "Shaders not supported in SDL2D");
+    Logger::log(Logger::Warning, "Shaders not supported in SDL2D");
 
     return true;
 }
 
 bool Shader::LoadFromFile(std::string vertexFilePath, std::string fragmentFilePath)
 {
-    Logger::Log(Logger::Warning, "Shaders not supported in SDL2D");
+    Logger::log(Logger::Warning, "Shaders not supported in SDL2D");
 
     return true;
 }
 
 void Shader::UseShader()
 {
-    Logger::Log(Logger::Warning, "Shaders not supported in SDL2D");
+    Logger::log(Logger::Warning, "Shaders not supported in SDL2D");
 }

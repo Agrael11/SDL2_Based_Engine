@@ -47,7 +47,7 @@ I recommend configuring them to your liking.
 - *Logger::SaveTimedCopy* (bool) sets, wheter there will be copy of your log file, with timestamp of first logged message (true = use file)
 
 Logger have 5 message levels, in following order: Debug, Info, Warning, Error and Fatal.  
-You can use *Logger::Log(Logger::Level, std::string message)* function to log a message.  
+You can use *Logger::log(Logger::Level, std::string message)* function to log a message.  
 If needed, I provided *string_format* function in *Engine/Helper/Format.h* file  
 
 ### Sprites

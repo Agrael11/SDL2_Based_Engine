@@ -19,7 +19,7 @@ bool RenderTexture::Create(int width, int height, Renderer &renderer)
 
     if (!glCheckFramebufferStatus(GL_FRAMEBUFFER))
     {
-        Logger::Log(Logger::Error, "Unable to create render texture!");
+        Logger::log(Logger::Level::Error, "Unable to create render texture!");
         return false;
     }
 

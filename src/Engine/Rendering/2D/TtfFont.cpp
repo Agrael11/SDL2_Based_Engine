@@ -9,11 +9,11 @@ using namespace Engine::Helper;
 
 bool TtfFont::Load(std::string filePath, int size, Renderer &renderer)
 {
-    Logger::Log(Logger::Info, string_format("Loading font %s...", filePath.c_str()));
+    Logger::log(Logger::Level::Info, string_format("Loading font %s...", filePath.c_str()));
     this->mFont = TTF_OpenFont(filePath.c_str(), size);
     if (this->mFont == NULL)
     {
-        Logger::Log(Logger::Error, string_format("Could not load font %s. SDL_ttf Error: %s!", filePath.c_str(), TTF_GetError()));
+        Logger::log(Logger::Level::Error, string_format("Could not load font %s. SDL_ttf Error: %s!", filePath.c_str(), TTF_GetError()));
         return false;
     }
 
