@@ -13,24 +13,25 @@ Sound::~Sound()
 Sound::Sound(Sound&& other) noexcept
     : m_chunk(std::move(other.m_chunk)), m_channel(other.m_channel)
 {
-    other.m_channel = -1;  // Reset source's channel to invalid
+    other.m_channel = -1;
 }
 
-// Move assignment operator
 Sound& Sound::operator=(Sound&& other) noexcept
 {
     if (this != &other)
     {
-        m_chunk = std::move(other.m_chunk);  // Transfer the Mix_Chunk ownership
-        m_channel = other.m_channel;         // Transfer the channel
+        m_chunk = std::move(other.m_chunk);
+        m_channel = other.m_channel;
 
-        other.m_channel = -1;  // Reset source's channel to invalid
+        other.m_channel = -1;
     }
     return *this;
 }
 
 bool Sound::load(std::string_view path)
 {
+    this->unload();
+
     Mix_Chunk* chunk = Mix_LoadWAV(path.data());
     if (chunk == nullptr)
     {
