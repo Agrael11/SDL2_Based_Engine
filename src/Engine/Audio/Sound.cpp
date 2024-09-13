@@ -5,54 +5,75 @@
 using namespace Engine::Helper;
 using namespace Engine::Audio;
 
-bool Sound::Load(std::string path)
+Sound::~Sound()
 {
-    this->mChunk = Mix_LoadWAV(path.c_str());
-    if (this->mChunk == NULL)
+    unload();
+}
+
+Sound::Sound(Sound&& other) noexcept
+    : m_chunk(std::move(other.m_chunk)), m_channel(other.m_channel)
+{
+    other.m_channel = -1;  // Reset source's channel to invalid
+}
+
+// Move assignment operator
+Sound& Sound::operator=(Sound&& other) noexcept
+{
+    if (this != &other)
     {
-        Logger::log(Logger::Level::Error, "Failed to load sound chunk file {}! SDL_Mixer Error: {}", path.c_str(), Mix_GetError());
+        m_chunk = std::move(other.m_chunk);  // Transfer the Mix_Chunk ownership
+        m_channel = other.m_channel;         // Transfer the channel
+
+        other.m_channel = -1;  // Reset source's channel to invalid
+    }
+    return *this;
+}
+
+bool Sound::load(std::string_view path)
+{
+    Mix_Chunk* chunk = Mix_LoadWAV(path.data());
+    if (chunk == nullptr)
+    {
+        Logger::log(Logger::Level::Error, "Failed to load sound chunk file {}! SDL_Mixer Error: {}", path.data(), Mix_GetError());
         return false;
     }
+    this->m_chunk.reset(chunk);
     return true;
 }
 
-bool Sound::Play(int loops)
+bool Sound::play(int loops)
 {
-    int channel = Mix_PlayChannel(-1, this->mChunk, loops);
+    int channel = Mix_PlayChannel(-1, this->m_chunk.get(), loops);
     if (channel == -1)
     {
         Logger::log(Logger::Level::Error, "Failed to play sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
-    this->mChannel = channel;
+    this->m_channel = channel;
     return true;
 }
 
-bool Sound::Play(int loops, int volume)
+bool Sound::play(int loops, int volume)
 {
-    int channel = Mix_PlayChannel(-1, this->mChunk, loops);
+    int channel = Mix_PlayChannel(-1, this->m_chunk.get(), loops);
     if (channel == -1)
     {
         Logger::log(Logger::Level::Error, "Failed to play sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
     }
     Mix_Volume(channel, volume);
-    this->mChannel = channel;
+    this->m_channel = channel;
     return true;
 }
 
-bool Sound::IsPlaying()
+bool Sound::isPlaying()
 {
-    if (Mix_Playing(this->mChannel) == 0)
-    {
-        return false;
-    }
-    return true;
+    return Mix_Playing(this->m_channel) != 0;
 }
 
-bool Sound::Stop()
+bool Sound::stop()
 {
-    if (Mix_HaltChannel(this->mChannel) == 0)
+    if (Mix_HaltChannel(this->m_channel) == 0)
     {
         Logger::log(Logger::Level::Error, "Failed to stop sound! SDL_Mixer Error: {}", Mix_GetError());
         return false;
@@ -60,11 +81,10 @@ bool Sound::Stop()
     return true;
 }
 
-void Sound::Unload()
+void Sound::unload()
 {
-    if (this->mChunk == NULL)
+    if (this->m_chunk)
     {
-        return;   
+        m_chunk.reset();
     }
-    Mix_FreeChunk(this->mChunk);
 }

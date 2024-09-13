@@ -7,15 +7,25 @@ namespace Engine::Audio
 {
     class Sound
     {
-        private:
-            Mix_Chunk* mChunk;
-            int mChannel;
         public:
-            bool Load(std::string path);
-            bool Play(int loops);
-            bool Play(int loops, int volume);
-            bool IsPlaying();
-            bool Stop();
-            void Unload();
+            Sound() = default;
+            ~Sound();
+
+            Sound(const Sound&) = delete;
+            Sound& operator=(const Sound&) = delete;
+
+            Sound(Sound&&) noexcept;
+            Sound& operator=(Sound&&) noexcept;
+
+            bool load(std::string_view path);
+            bool play(int loops);
+            bool play(int loops, int volume);
+            bool isPlaying();
+            bool stop();
+            void unload();
+
+        private:
+            std::unique_ptr<Mix_Chunk, void(*)(Mix_Chunk*)> m_chunk{ nullptr, Mix_FreeChunk };
+            int m_channel = -1;
     };
 };
