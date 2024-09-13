@@ -95,6 +95,7 @@ elseif (UNIX)
     target_link_libraries(${PROJECT_AND_EXECATUBLE_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 elseif (WIN32)
   message("WINDOWS")
+
   find_package(SDL2 CONFIG REQUIRED)
   find_package(SDL2_image CONFIG REQUIRED)
   find_package(SDL2_mixer CONFIG REQUIRED)
