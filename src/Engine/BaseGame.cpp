@@ -266,34 +266,46 @@ void BaseGame::SetWindowTitle(std::string title)
 
 void BaseGame::ToggleFullscreen()
 {
-#if EMSCRIPTEN
-    Logger::log(Logger::Level::Warning, "Not supported in SDL currently.");
-    return;
-#else
     if (!this->mFullscreen)
     {
+#if EMSCRIPTEN
+        EMSCRIPTEN_RESULT res = emscripten_request_fullscreen("#canvas", EM_TRUE);
+        if (res != EMSCRIPTEN_RESULT_SUCCESS) {
+            Logger::log(Logger::Level::Error, "Failed to switch to fullscreen. SDL Error: {}", res);
+        }
+#else
         if (SDL_SetWindowFullscreen(this->mWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
         {
             Logger::log(Logger::Level::Warning, "Failed to switch to fullscreen. SDL Error: {}.", SDL_GetError());
             return;
         }
+#endif
         this->mOriginalWidth = this->windowWidth;
         this->mOriginalHeight = this->windowHeight;
         SDL_GetWindowSize(this->mWindow, &this->windowWidth, &this->windowHeight);
         this->mFullscreen = true;
+        this->renderer.SetViewport(0, 0, this->windowWidth, this->windowHeight);
         return;
     }
     
     
+#if EMSCRIPTEN
+    EMSCRIPTEN_RESULT res = emscripten_exit_fullscreen();
+    if (res != EMSCRIPTEN_RESULT_SUCCESS) {
+        Logger::log(Logger::Level::Error, "Failed to switch to windowed. SDL Error: {}", res);
+    }
+#else
     if (SDL_SetWindowFullscreen(this->mWindow, 0) != 0)
     {
         Logger::log(Logger::Level::Warning, "Failed to switch to windowed. SDL Error: {}.", SDL_GetError());
         return;
     }
+#endif
+    
     this->windowWidth = this->mOriginalWidth;
     this->windowHeight = this->mOriginalHeight;
     this->mFullscreen = false;
-#endif
+    this->renderer.SetViewport(0, 0, this->windowWidth, this->windowHeight);
 }
 
 void BaseGame::Init()
