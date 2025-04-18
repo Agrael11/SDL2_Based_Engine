@@ -14,10 +14,11 @@
       "architecture": "x64",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
+        "CMAKE_CXX_FLAGS_DEBUG": "/ZI /Od /Ob0 /MDd /RTC1",
+        "CMAKE_C_FLAGS_DEBUG": "/ZI /Od /Ob0 /MDd /RTC1",
+        "CMAKE_EXE_LINKER_FLAGS_DEBUG": "/DEBUG /INCREMENTAL",
         "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-        "CMAKE_CXX_FLAGS_DEBUG": "/ZI",
-        "CMAKE_EXE_LINKER_FLAGS_DEBUG": "/SAFESEH:NO"
       }
     },
     {
@@ -30,8 +31,9 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-        "CMAKE_CXX_FLAGS_DEBUG": "/ZI",
-        "CMAKE_EXE_LINKER_FLAGS_DEBUG": "/SAFESEH:NO"
+        "CMAKE_CXX_FLAGS_DEBUG": "/ZI /Od /Ob0 /MDd /RTC1",
+        "CMAKE_C_FLAGS_DEBUG": "/ZI /Od /Ob0 /MDd /RTC1",
+        "CMAKE_EXE_LINKER_FLAGS_DEBUG": "/DEBUG /INCREMENTAL"
       }
     },
     {
