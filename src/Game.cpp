@@ -11,6 +11,7 @@
 #include "Engine/Helper/StringHelp.h"
 #include "Engine/Rendering/ImageTexture.h"
 #include "Engine/Managers/TextureManager.h"
+#include "Engine/Managers/ShaderManager.h"
 
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
@@ -19,6 +20,7 @@ using namespace Engine::Helper;
 using namespace Engine::Math;
 using namespace Engine::Audio;
 using namespace Engine::Rendering;
+using namespace Engine::Managers;
 
 RenderTexture Game::BuildTexture(int width, int height, Colorf &color)
 {
@@ -123,7 +125,7 @@ void Game::Init()
 void Game::LoadContent()
 {
     #ifndef USE_SDL2D
-    this->mShader.LoadFromFile("Assets/mainShader.vert", "Assets/mainShader.frag");
+	ShaderManager::AddShader("Main Shader", "Assets/mainShader.vert", "Assets/mainShader.frag");
     #endif
 
     RenderTexture mainRenderTexture;
@@ -132,19 +134,17 @@ void Game::LoadContent()
     RenderTexture greenSquareTexture;
     ImageTexture backgroundImageTexture;
 
-    mainRenderTexture.Create(64, 64);
-    blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
-    blueSquareTexture = this->BuildTexture(4,4,this->mColorDarkBlue);
-    greenSquareTexture = this->BuildTexture(4,4,this->mColorLightGreen);
-    backgroundImageTexture.Load("Assets/BG.png");
-    TextureManager::AddTexture("Main Render Texture", mainRenderTexture);
-
+    TextureManager::AddTexture("Main Render Texture", 64, 64);
     this->mainTarget.Load(mainRenderTexture, renderer);
+
+    blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
     this->blackSquare.Load(blackSquareTexture, renderer);
+    blueSquareTexture = this->BuildTexture(4,4,this->mColorDarkBlue);
     this->blueSquare.Load(blueSquareTexture, renderer);
+    greenSquareTexture = this->BuildTexture(4,4,this->mColorLightGreen);
     this->greenSquare.Load(greenSquareTexture, renderer);
     this->greenSquare.SetOrigin(0.5f, 0.5f);
-
+    backgroundImageTexture.Load("Assets/BG.png");
     this->backgroundImage.Load(backgroundImageTexture, renderer);
     Colorf cMod(0.1f,0.1f,0.1f,1.f);
     this->backgroundImage.SetColorMod(cMod);
@@ -162,11 +162,11 @@ void Game::LoadContent()
 
 void Game::Draw(double delta)
 {
-    this->renderer.SetRenderTarget(TextureManager::GetRenderTexture("Main Render Texture"));
+    this->renderer.SetRenderTarget(TextureManager::GetTexture<RenderTexture>("Main Render Texture"));
     this->renderer.Begin();
     this->renderer.Clean(this->mColorDarkRed);
     #ifndef USE_SDL2D
-    this->renderer.SetActiveShader(&this->mShader);
+    this->renderer.SetActiveShader(&ShaderManager::GetShader("Main Shader"));
     #endif
     Rectangle pos = Rectangle(0,0,64,64);
 

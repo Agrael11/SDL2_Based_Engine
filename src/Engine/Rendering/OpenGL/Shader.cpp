@@ -100,3 +100,8 @@ void Shader::UseShader()
 {
     glUseProgram(this->mShaderProgram);
 }
+
+void Shader::Unload()
+{
+	glDeleteProgram(this->mShaderProgram);
+}

@@ -17,5 +17,7 @@ namespace Engine::Rendering
         bool LoadFromFile(std::string vertexFilePath, std::string fragmentFilePath);
 
         void UseShader();
+
+        void Unload();
     };
 };

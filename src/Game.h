@@ -32,7 +32,6 @@ private:
     Engine::Math::Colorf mColorDarkBlue;
     Engine::Math::Colorf mColorDarkRed;
     Engine::Math::Colorf mColorLightGreen;
-    Engine::Rendering::Shader mShader;
     
 public:
     Engine::Rendering::TtfFont font;
