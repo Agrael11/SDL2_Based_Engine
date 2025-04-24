@@ -12,7 +12,7 @@ using namespace Engine::Helper;
 using namespace Engine::Rendering;
 using namespace Engine::Math;
 
-bool RenderTexture::Create(int width, int height, Renderer &renderer)
+bool RenderTexture::Create(int width, int height)
 {
     glGenFramebuffers(1, &this->mFrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, this->mFrameBuffer);
@@ -41,7 +41,7 @@ bool RenderTexture::Create(int width, int height, Renderer &renderer)
     return true;
 }
 
-bool RenderTexture::SetAsRenderTarget(Renderer &renderer)
+bool RenderTexture::SetAsRenderTarget()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, this->mFrameBuffer);
     return true;

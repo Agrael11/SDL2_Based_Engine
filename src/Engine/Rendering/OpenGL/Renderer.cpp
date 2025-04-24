@@ -68,7 +68,7 @@ Rectangle Renderer::GetViewport()
 bool Renderer::SetRenderTarget(RenderTexture &texture)
 {
     this->mRenderTexture = true;
-    return texture.SetAsRenderTarget(*this);
+    return texture.SetAsRenderTarget();
 }
 bool Renderer::CleanRenderTarget()
 {

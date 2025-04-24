@@ -13,7 +13,7 @@ using namespace Engine::Math;
 using namespace Engine::Helper;
 using namespace Engine::Rendering;
 
-bool ImageTexture::Load(std::string filePath, Renderer &renderer)
+bool ImageTexture::Load(std::string filePath)
 {
     Logger::log(Logger::Level::Info, "Loading texture {}...", filePath.c_str());
     this->name = filePath;
