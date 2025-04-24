@@ -1,11 +1,18 @@
 #pragma once
 
-#include "../Rendering/RenderTexture.h"
-#include "../Rendering/ImageTexture.h"
-#include "../Rendering/Texture.h"
+#include <string>
 
-class TextureManager
+namespace Engine::Rendering
 {
+	class Texture;
+	class ImageTexture;
+	class RenderTexture;
+};
+
+namespace Engine::Managers
+{
+	class TextureManager
+	{
 	private:
 		TextureManager();
 
@@ -14,17 +21,18 @@ class TextureManager
 
 		static bool AddTexture(std::string id, std::string filename);
 		static bool AddTexture(std::string id, int width, int height);
-		static bool AddTexture(std::string id, Engine::Rendering::Texture texture);
-		static bool AddTexture(std::string id, Engine::Rendering::RenderTexture texture);
-		static bool AddTexture(std::string id, Engine::Rendering::ImageTexture texture);
+		static bool AddTexture(std::string id, Engine::Rendering::Texture& texture);
+		static bool AddTexture(std::string id, Engine::Rendering::RenderTexture& texture);
+		static bool AddTexture(std::string id, Engine::Rendering::ImageTexture& texture);
 
 		static bool TextureExists(std::string id);
 
 		static TextureType GetTextureType(std::string id);
-		static Engine::Rendering::Texture& GetTexture(std::string id);
-		static Engine::Rendering::ImageTexture& GetImageTexture(std::string id);
-		static Engine::Rendering::RenderTexture& GetRenderTexture(std::string id);
+		template <typename T>
+		static T& GetTexture(std::string id);
+		static unsigned int GetTextureHandle(std::string id);
 
 		static bool RemoveTexture(std::string id);
 		static bool RemoveAll();
+	};
 };

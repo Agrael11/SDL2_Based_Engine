@@ -12,6 +12,6 @@ namespace Engine::Rendering
     public:
         std::string name;
         bool Load(std::string filePath);
-        void Unload();
+        void Unload() override;
     };
 };

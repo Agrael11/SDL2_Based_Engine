@@ -11,6 +11,6 @@ namespace Engine::Rendering
     public:
         bool Create(int width, int height);
         bool SetAsRenderTarget();
-        void Unload();
+        void Unload() override;
     };
 };

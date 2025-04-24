@@ -2,14 +2,15 @@
 
 #include <unordered_map>
 #include "../Helper/Logger.h"
-
+#include "../Rendering/RenderTexture.h"
+#include "../Rendering/ImageTexture.h"
+#include "../Rendering/Texture.h"
 using namespace std;
 using namespace Engine::Rendering;
 using namespace Engine::Helper;
+using namespace Engine::Managers;
 
-static std::unordered_map<std::string, Engine::Rendering::ImageTexture> mImageTextures;
-static std::unordered_map<std::string, Engine::Rendering::RenderTexture> mRenderTextures;
-static std::unordered_map<std::string, Engine::Rendering::Texture> mBasicTextures;
+static std::unordered_map<std::string, std::unique_ptr<Engine::Rendering::Texture>> mTextures;
 
 TextureManager::TextureManager()
 {
@@ -24,13 +25,14 @@ bool TextureManager::AddTexture(std::string id, std::string filename)
 		return false;
 	}
 
-	ImageTexture texture;
-	if (!texture.Load(filename))
+	std::unique_ptr<ImageTexture> texture = std::make_unique<ImageTexture>();
+	if (!texture->Load(filename))
 	{
+		texture.reset();
 		return false;
 	}
 
-	mImageTextures[id] = texture;
+	mTextures[id] = std::move(texture);
 	Logger::log(Logger::Level::Info, "Added new {} (IT) to Texture Manager", id);
 	
 	return true;
@@ -50,13 +52,13 @@ bool TextureManager::AddTexture(std::string id, int width, int height)
 		return false;
 	}
 
-	mRenderTextures[id] = texture;
+	mTextures[id] = std::make_unique<Engine::Rendering::Texture>(std::move(texture));;
 	Logger::log(Logger::Level::Info, "Added new {} (RT) to Texture Manager", id);
 
 	return true;
 }
 
-bool TextureManager::AddTexture(std::string id, ImageTexture texture)
+bool TextureManager::AddTexture(std::string id, ImageTexture& texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
@@ -64,13 +66,13 @@ bool TextureManager::AddTexture(std::string id, ImageTexture texture)
 		return false;
 	}
 
-	mImageTextures[id] = texture;
+	mTextures[id] = std::make_unique<Engine::Rendering::ImageTexture>(std::move(texture));;
 	Logger::log(Logger::Level::Info, "Added {} (IT) to Texture Manager", id);
 
 	return true;
 }
 
-bool TextureManager::AddTexture(std::string id, RenderTexture texture)
+bool TextureManager::AddTexture(std::string id, RenderTexture& texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
@@ -78,13 +80,13 @@ bool TextureManager::AddTexture(std::string id, RenderTexture texture)
 		return false;
 	}
 
-	mRenderTextures[id] = texture;
+	mTextures[id] = std::make_unique<Engine::Rendering::RenderTexture>(std::move(texture));;
 	Logger::log(Logger::Level::Info, "Added {} (RT) to Texture Manager", id);
 
 	return true;
 }
 
-bool TextureManager::AddTexture(std::string id, Texture texture)
+bool TextureManager::AddTexture(std::string id, Texture& texture)
 {
 	if (TextureManager::TextureExists(id))
 	{
@@ -92,7 +94,7 @@ bool TextureManager::AddTexture(std::string id, Texture texture)
 		return false;
 	}
 
-	mBasicTextures[id] = texture;
+	mTextures[id] = std::make_unique<Engine::Rendering::Texture>(std::move(texture));;
 	Logger::log(Logger::Level::Info, "Added {} to Texture Manager", id);
 
 	return true;
@@ -100,85 +102,62 @@ bool TextureManager::AddTexture(std::string id, Texture texture)
 
 bool TextureManager::TextureExists(std::string id)
 {
-	return ((mImageTextures.count(id) > 0) || (mRenderTextures.count(id) > 0) || (mBasicTextures.count(id) > 0));
+	return (mTextures.count(id) > 0);
 }
 
 TextureManager::TextureType TextureManager::GetTextureType(std::string id)
 {
-	if (mImageTextures.count(id) > 0)
+	if (!(TextureManager::TextureExists(id)))
 	{
-		return TextureType::ImageTextureType;
+		throw std::runtime_error("Texture " + id + " does not exist");
 	}
-	else if (mRenderTextures.count(id) > 0)
+
+	Texture* texture = mTextures[id].get();
+	if (dynamic_cast<RenderTexture*>(texture))
 	{
 		return TextureType::RenderTextureType;
 	}
-	else if (mBasicTextures.count(id) > 0)
+	if (dynamic_cast<ImageTexture*>(texture))
 	{
-		return TextureType::BasicTextureType;
+		return TextureType::ImageTextureType;
+	}
+	return TextureType::BasicTextureType;
+}
+
+template <typename T>
+T& TextureManager::GetTexture(std::string id)
+{
+	if (!(TextureManager::TextureExists(id)))
+	{
+		throw std::runtime_error("Texture " + id + " does not exist");
+	}
+
+	Texture* texture = mTextures[id].get();
+
+	if (dynamic_cast<T*>(texture))
+	{
+		return *static_cast<T*>(texture);
 	}
 	else
 	{
-		throw std::runtime_error("Texture " + id + " does not exist");
+		throw std::runtime_error("Texture " + id + " is not of the requested type");
 	}
 }
 
-Texture& TextureManager::GetTexture(std::string id)
+template RenderTexture& TextureManager::GetTexture<RenderTexture>(std::string);
+template ImageTexture& TextureManager::GetTexture<ImageTexture>(std::string);
+template Texture& TextureManager::GetTexture<Texture>(std::string);
+
+unsigned int TextureManager::GetTextureHandle(std::string id)
 {
 	if (!(TextureManager::TextureExists(id)))
 	{
 		throw std::runtime_error("Texture " + id + " does not exist");
 	}
-
-	switch (TextureManager::GetTextureType(id))
-	{
-		case TextureManager::TextureType::BasicTextureType:
-			return mBasicTextures[id];
-			break;
-		case TextureManager::TextureType::ImageTextureType:
-			return mImageTextures[id];
-			break;
-		case TextureManager::TextureType::RenderTextureType:
-			return mRenderTextures[id];
-			break;
-		default:
-			throw std::runtime_error("Texture " + id + " is of unknown type");
-	}
+	
+	return mTextures[id]->GetHandle();
 }
 
-ImageTexture& TextureManager::GetImageTexture(std::string id)
-{
-	if (!(TextureManager::TextureExists(id)))
-	{
-		throw std::runtime_error("Texture " + id + " does not exist");
-	}
-	switch (TextureManager::GetTextureType(id))
-	{
-	case TextureManager::TextureType::ImageTextureType:
-		return mImageTextures[id];
-		break;
-	default:
-		throw std::runtime_error("Texture " + id + " is not ImageTexture");
-		break;
-	}
-}
-
-RenderTexture& TextureManager::GetRenderTexture(std::string id)
-{
-	if (!(TextureManager::TextureExists(id)))
-	{
-		throw std::runtime_error("Texture " + id + " does not exist");
-	}
-	switch (TextureManager::GetTextureType(id))
-	{
-	case TextureManager::TextureType::RenderTextureType:
-		return mRenderTextures[id];
-		break;
-	default:
-		throw std::runtime_error("Texture " + id + " is not ImageTexture");
-		break;
-	}
-}
 
 bool TextureManager::RemoveTexture(std::string id)
 {
@@ -187,40 +166,20 @@ bool TextureManager::RemoveTexture(std::string id)
 		Logger::log(Logger::Level::Warning, "Texture {} does not exist", id);
 		return false;
 	}
-	switch (TextureManager::GetTextureType(id))
-	{
-	case TextureManager::TextureType::BasicTextureType:
-		mBasicTextures[id].Unload();
-		mBasicTextures.erase(id);
-		break;
-	case TextureManager::TextureType::ImageTextureType:
-		mImageTextures[id].Unload();
-		mImageTextures.erase(id);
-		break;
-	case TextureManager::TextureType::RenderTextureType:
-		mRenderTextures[id].Unload();
-		mRenderTextures.erase(id);
-		break;
-	}
+
+	mTextures[id]->Unload();
+	mTextures[id].reset();
+	mTextures.erase(id);
 	return true;
 }
 
 bool TextureManager::RemoveAll()
 {
-	for (auto& texture: mBasicTextures)
+	for (auto& texture: mTextures)
 	{
-		texture.second.Unload();
+		texture.second->Unload();
+		texture.second.reset();
 	}
-	for (auto& texture : mImageTextures)
-	{
-		texture.second.Unload();
-	}
-	for (auto& texture : mRenderTextures)
-	{
-		texture.second.Unload();
-	}
-	mBasicTextures.clear();
-	mImageTextures.clear();
-	mRenderTextures.clear();
+	mTextures.clear();
 	return true;
 }
