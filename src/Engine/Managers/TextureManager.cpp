@@ -1,7 +1,7 @@
 #include "TextureManager.h"
 
 #include <unordered_map>
-#include "Helper/Logger.h"
+#include "../Helper/Logger.h"
 
 using namespace std;
 using namespace Engine::Rendering;
@@ -16,7 +16,7 @@ TextureManager::TextureManager()
 
 }
 
-bool TextureManager::AddTexture(std::string id, std::string filename, Engine::Rendering::Renderer& renderer)
+bool TextureManager::AddTexture(std::string id, std::string filename)
 {
 	if (TextureManager::TextureExists(id))
 	{
@@ -25,7 +25,7 @@ bool TextureManager::AddTexture(std::string id, std::string filename, Engine::Re
 	}
 
 	ImageTexture texture;
-	if (!texture.Load(filename, renderer))
+	if (!texture.Load(filename))
 	{
 		return false;
 	}
@@ -36,7 +36,7 @@ bool TextureManager::AddTexture(std::string id, std::string filename, Engine::Re
 	return true;
 }
 
-bool TextureManager::AddTexture(std::string id, int width, int height, Engine::Rendering::Renderer& renderer)
+bool TextureManager::AddTexture(std::string id, int width, int height)
 {
 	if (TextureManager::TextureExists(id))
 	{
@@ -45,7 +45,7 @@ bool TextureManager::AddTexture(std::string id, int width, int height, Engine::R
 	}
 
 	RenderTexture texture;
-	if (!texture.Create(width, height, renderer))
+	if (!texture.Create(width, height))
 	{
 		return false;
 	}

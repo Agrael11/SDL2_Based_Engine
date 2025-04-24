@@ -10,7 +10,7 @@
 #include "Engine/Support.h"
 #include "Engine/Helper/StringHelp.h"
 #include "Engine/Rendering/ImageTexture.h"
-#include "Engine/TextureManager.h"
+#include "Engine/Managers/TextureManager.h"
 
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
@@ -23,7 +23,7 @@ using namespace Engine::Rendering;
 RenderTexture Game::BuildTexture(int width, int height, Colorf &color)
 {
     RenderTexture texture;
-    texture.Create(width, height, renderer);
+    texture.Create(width, height);
 
     this->renderer.SetRenderTarget(texture);
     this->renderer.Begin();
@@ -132,11 +132,11 @@ void Game::LoadContent()
     RenderTexture greenSquareTexture;
     ImageTexture backgroundImageTexture;
 
-    mainRenderTexture.Create(64, 64, renderer);
+    mainRenderTexture.Create(64, 64);
     blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
     blueSquareTexture = this->BuildTexture(4,4,this->mColorDarkBlue);
     greenSquareTexture = this->BuildTexture(4,4,this->mColorLightGreen);
-    backgroundImageTexture.Load("Assets/BG.png", renderer);
+    backgroundImageTexture.Load("Assets/BG.png");
     TextureManager::AddTexture("Main Render Texture", mainRenderTexture);
 
     this->mainTarget.Load(mainRenderTexture, renderer);
