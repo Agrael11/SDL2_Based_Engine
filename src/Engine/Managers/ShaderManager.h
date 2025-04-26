@@ -26,4 +26,4 @@ namespace Engine::Managers
 		static bool RemoveShader(std::string id);
 		static bool RemoveAll();
 	};
-}
+};

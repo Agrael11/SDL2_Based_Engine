@@ -52,7 +52,7 @@ bool TextureManager::AddTexture(std::string id, int width, int height)
 		return false;
 	}
 
-	mTextures[id] = std::make_unique<Engine::Rendering::Texture>(std::move(texture));;
+	mTextures[id] = std::make_unique<Engine::Rendering::RenderTexture>(std::move(texture));;
 	Logger::log(Logger::Level::Info, "Added new {} (RT) to Texture Manager", id);
 
 	return true;

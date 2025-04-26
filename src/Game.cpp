@@ -112,7 +112,7 @@ void Game::Init()
         InitAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     }
     
-    this->mColorBlack = Colorf(0.8f,0.8f,0.8f,1.0f);
+    this->mColorBlack = Colorf(0.f,0.f,0.f,1.0f);
     this->mColorDarkGray = Colorf(0.1f,0.1f,0.1f,1.0f);
     this->mColorDarkBlue = Colorf(0.1f,0.1f,1.0f,1.0f);
     this->mColorDarkRed = Colorf(0.3f,0.1f,0.1f,1.0f);
@@ -128,14 +128,13 @@ void Game::LoadContent()
 	ShaderManager::AddShader("Main Shader", "Assets/mainShader.vert", "Assets/mainShader.frag");
     #endif
 
-    RenderTexture mainRenderTexture;
     RenderTexture blackSquareTexture;
     RenderTexture blueSquareTexture;
     RenderTexture greenSquareTexture;
     ImageTexture backgroundImageTexture;
 
     TextureManager::AddTexture("Main Render Texture", 64, 64);
-    this->mainTarget.Load(mainRenderTexture, renderer);
+    this->mainTarget.Load(TextureManager::GetTexture<RenderTexture>("Main Render Texture"), this->renderer);
 
     blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
     this->blackSquare.Load(blackSquareTexture, renderer);
@@ -162,12 +161,12 @@ void Game::LoadContent()
 
 void Game::Draw(double delta)
 {
+#ifndef USE_SDL2D
+    this->renderer.SetActiveShader(&ShaderManager::GetShader("Main Shader"));
+#endif
     this->renderer.SetRenderTarget(TextureManager::GetTexture<RenderTexture>("Main Render Texture"));
     this->renderer.Begin();
     this->renderer.Clean(this->mColorDarkRed);
-    #ifndef USE_SDL2D
-    this->renderer.SetActiveShader(&ShaderManager::GetShader("Main Shader"));
-    #endif
     Rectangle pos = Rectangle(0,0,64,64);
 
     this->renderer.DrawSprite(this->backgroundImage, pos);
@@ -236,12 +235,12 @@ void Game::Draw(double delta)
 
 
     //Draw canvas
-    
+
     this->renderer.CleanRenderTarget();
     this->renderer.Begin();
 
     this->renderer.Clean(this->mColorBlack);
-
+    
     if (this->windowWidth < this->windowHeight)
     {
         pos.X = 0;
