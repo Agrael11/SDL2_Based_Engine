@@ -1,5 +1,6 @@
 #pragma once
 
+#undef main
 #include <SDL.h>
 
 namespace Engine::Math
