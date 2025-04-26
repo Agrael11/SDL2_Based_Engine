@@ -16,6 +16,9 @@
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Colorf.h"
 
+#include "Engine/Rendering/MaterialProperty.h"
+#include "Engine/Rendering/Material.h"
+
 using namespace Engine::Helper;
 using namespace Engine::Math;
 using namespace Engine::Audio;
@@ -135,6 +138,15 @@ void Game::LoadContent()
 
     TextureManager::AddTexture("Main Render Texture", 64, 64);
     this->mainTarget.Load(TextureManager::GetTexture<RenderTexture>("Main Render Texture"), this->renderer);
+
+
+    Material m;
+    MaterialProperty prop("ourTexture", "Main Render Texture");
+    m.SetShader("Main Shader");
+    m.SetProperty("ourTexture", prop);
+    m.Apply();
+    m.Reset();
+
 
     blackSquareTexture = this->BuildTexture(4,4,this->mColorDarkGray);
     this->blackSquare.Load(blackSquareTexture, renderer);

@@ -3,10 +3,10 @@ set(PROJECT_AND_EXECATUBLE_NAME SDL_Engine_Base)
 project(${PROJECT_AND_EXECATUBLE_NAME})
 set(CMAKE_CXX_STANDARD 20)
 
-option(USE_SDL2 "Use SDL2 Renderer" OFF)
+option(USE_SDL2 "Use SDL2 Renderer" OFF) #TO BE REMOVED
 option(USE_OPENGL "Use OpenGL Renderer" ON)
 option(USE_VULKAN "Use Vulkan Renderer" OFF) # NOT USED YET
-option(USE_OPENGL_ES "Use SDL2 Renderer" OFF)
+option(USE_OPENGL_ES "Use OpenGL ES Renderer" OFF)
 option(EMSCRIPTEN_BUILD "Is Emscripten Build" OFF)
 option(LINUX_BUILD "Is Linux Build" OFF)
 
