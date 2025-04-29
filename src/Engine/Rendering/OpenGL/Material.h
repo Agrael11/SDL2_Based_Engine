@@ -3,12 +3,11 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include "MaterialProperty.h"
 
 
 namespace Engine::Rendering
 {
-	class MaterialProperty;
-
 	class Material
 	{
 	private:
