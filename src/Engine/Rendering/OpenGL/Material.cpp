@@ -184,8 +184,7 @@ bool Material::ApplyProperty(uint32_t shader, MaterialProperty& property, int& t
 		}
 		break;
 	case MaterialPropertyType::Matrix2x2:
-		glm::mat2x2 mat = std::any_cast<glm::mat2x2>(value);
-		glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+		glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(std::any_cast<glm::mat2x2>(value)));
 		break;
 	case MaterialPropertyType::Matrix2x3:
 		glUniformMatrix2x3fv(location, 1, GL_FALSE, glm::value_ptr(std::any_cast<glm::mat2x3>(value)));

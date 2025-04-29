@@ -5,6 +5,8 @@
 #include "../Rendering/RenderTexture.h"
 #include "../Rendering/ImageTexture.h"
 #include "../Rendering/Texture.h"
+#include <memory>
+
 using namespace std;
 using namespace Engine::Rendering;
 using namespace Engine::Helper;

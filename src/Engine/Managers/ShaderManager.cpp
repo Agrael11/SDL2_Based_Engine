@@ -4,9 +4,12 @@
 #include <unordered_map>
 #include "../Helper/Logger.h"
 
+#include <memory>
+
 using namespace Engine::Helper;
 using namespace Engine::Managers;
 using namespace Engine::Rendering;
+
 
 std::unordered_map<std::string, std::unique_ptr<Shader>> m_shaders;
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SDL_mixer.h>
+#include <memory>
 
 namespace Engine::Audio
 {
