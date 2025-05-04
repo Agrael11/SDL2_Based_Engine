@@ -23,13 +23,11 @@ bool ImageTexture::Load(std::string filePath)
     int nrChannels;
 
     glGenTextures(1, &this->mTexture);
-    glBindTexture(GL_TEXTURE_2D, this->mTexture);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+    SetTextureWrapMode(TextureWrap::ClampToEdge, TextureWrap::ClampToEdge);
+    SetTextureFilterMode(TextureFilter::Nearest, TextureFilter::Nearest);
+
+    glBindTexture(GL_TEXTURE_2D, this->mTexture);
     stbi_set_flip_vertically_on_load(true);
     unsigned char* data = stbi_load(filePath.c_str(), &sizeX, &sizeY, &nrChannels, 0);
     if (data)
