@@ -9,12 +9,11 @@ namespace Engine::Base
 	{
 	public:
 		MaterialComponent();
-		~MaterialComponent() override {}
-		void Update(float deltaTime) override {}
+		~MaterialComponent() override = default;
 		std::string GetMaterialName();
 		void SetMaterialName(const std::string& material_name);
 	
 	private:
-		std::string mName;
+		std::string mName;	
 	};
 }

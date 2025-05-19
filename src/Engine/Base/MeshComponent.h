@@ -9,8 +9,7 @@ namespace Engine::Base
 	{
 	public:
 		MeshComponent();
-		~MeshComponent() override {}
-		void Update(float deltaTime) override {}
+		~MeshComponent() override = default;
 		std::string GetMeshName();
 		void SetMeshName(const std::string& mesh_name);
 	private:
