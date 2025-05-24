@@ -18,7 +18,7 @@ MaterialManager::MaterialManager()
 {
 }
 
-bool MaterialManager::AddMaterial(std::string id, Material& shader)
+bool MaterialManager::AddMaterial(std::string id, Material& material)
 {
 	if (MaterialExists(id))
 	{
@@ -26,7 +26,7 @@ bool MaterialManager::AddMaterial(std::string id, Material& shader)
 		return false;
 	}
 
-	m_materials[id] = std::make_unique<Material>(std::move(shader));
+	m_materials[id] = std::make_unique<Material>(std::move(material));
 	return true;
 }
 
