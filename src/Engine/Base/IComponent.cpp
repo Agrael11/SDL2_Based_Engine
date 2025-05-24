@@ -2,14 +2,14 @@
 
 using namespace Engine::Base;
 
-void IComponent::Init()
+void IComponent::Init(GameObject& parent)
 {
 }
 
-void IComponent::Update(float deltaTime)
+void IComponent::Update(GameObject& parent, float deltaTime)
 {
 }
 
-void IComponent::Destroy()
+void IComponent::Destroy(GameObject& parent)
 {
 }
