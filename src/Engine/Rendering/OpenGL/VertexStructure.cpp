@@ -26,7 +26,7 @@ const std::string_view VertexStructure::GetAttributeName(int index)
 
 int VertexStructure::GetAttributeCount()
 {
-	return this->attributeLength.size();
+	return static_cast<int>(this->attributeLength.size());
 }
 
 int VertexStructure::GetTotalSize()
