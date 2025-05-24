@@ -1,6 +1,8 @@
 #include "Mesh.h"
 #include "../../Helper/Logger.h"
 
+#include <cstring>
+
 #include "VertexStructure.h"
 #include "glad/glad.h"	
 

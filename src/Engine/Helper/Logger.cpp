@@ -112,6 +112,7 @@ namespace Engine::Helper
         printf("[%s%s%s @ %s%s%s] %s\n", levelColor.c_str(), levelString.c_str(), gray.c_str(), blue.c_str(), realTime.data(), gray.c_str(), message.data());
     }
 
+#ifndef EMSCRIPTEN
     void Logger::logFile(const Logger::Level level, const std::string_view message, const std::string_view realTime)
     {
         std::string levelString;
@@ -164,4 +165,5 @@ namespace Engine::Helper
         }
         m_openedFile = true;
     }
+#endif
 }

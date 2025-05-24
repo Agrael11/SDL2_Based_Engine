@@ -10,6 +10,11 @@
 #include <SDL_opengles2.h>
 #endif
 
+#ifdef EMSCRIPTEN
+#include "emscripten.h"
+#include "emscripten/html5.h"
+#endif
+
 #include <SDL_ttf.h>
 
 using namespace Engine;
