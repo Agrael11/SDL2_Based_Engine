@@ -44,7 +44,7 @@ Material& MaterialManager::GetMaterial(std::string id)
 	return *m_materials[id];
 }
 
-bool MaterialManager::RemoveShader(std::string id)
+bool MaterialManager::RemoveMaterial(std::string id)
 {
 	if (!MaterialExists(id))
 	{

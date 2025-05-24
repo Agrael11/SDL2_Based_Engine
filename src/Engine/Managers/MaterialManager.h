@@ -21,7 +21,7 @@ namespace Engine::Managers
 
 		static Engine::Rendering::Material& GetMaterial(std::string id);
 		
-		static bool RemoveShader(std::string id);
+		static bool RemoveMaterial(std::string id);
 		static bool RemoveAll();
 	};
 };
